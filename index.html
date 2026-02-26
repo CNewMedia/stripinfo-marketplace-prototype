@@ -111,7 +111,7 @@ body{padding-top:40px}
 
 .pg-header{
   background:var(--w);border-bottom:1px solid var(--border);
-  padding:24px 0 20px;margin-bottom:24px;
+  padding:16px 0 14px;margin-bottom:20px;
 }
 .pg-header h1{font-size:22px;font-weight:900;color:var(--t);margin-bottom:4px}
 .pg-header p{font-size:14px;color:var(--ts)}
@@ -882,26 +882,14 @@ input[type=range]{width:100%;accent-color:var(--g)}
      PAGE 4: MIJN AANBIEDINGEN
 ══════════════════════════════════════════════ */
 <div class="page" id="p-aanbiedingen">
-  <div class="pg-header">
-    <div class="wrap">
-      <div class="breadcrumb">Marketplace <span>›</span> Mijn dashboard</div>
-      <h1>Mijn marketplace</h1>
+  <div style="background:#fff;border-bottom:2px solid var(--border);position:sticky;top:176px;z-index:50">
+    <div style="max-width:1160px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:0;overflow-x:auto">
+        <a href="#" onclick="go('aanbiedingen');return false" style="padding:12px 18px;font-size:13px;color:var(--g);border-bottom:3px solid var(--g);font-weight:700;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aanbiedingen</a><a href="#" onclick="go('verkopen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn verkopen</a><a href="#" onclick="go('aankopen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aankopen</a><a href="#" onclick="go('berichten');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Berichten <span style='background:#e8192c;color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px'>2</span></a><a href="#" onclick="go('plaatsen');return false" style="margin-left:auto;background:var(--g);color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">+ Nieuwe aanbieding</a>
     </div>
   </div>
   <div class="page-body">
     <div class="wrap">
-      <div class="dash-layout" style="display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start">
-        <!-- nav -->
-        <div class="dash-nav" style="width:210px;min-width:210px;flex-shrink:0">
-          <a class="on" href="#" onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
-          <a href="#" onclick="go('verkopen');return false"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
-          <a href="#" onclick="go('aankopen');return false"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
-          <a href="#" onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
-          <a href="#" onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
-        </div>
-
-        <!-- content -->
-        <div>
+      <div>
           <!-- stats -->
           <div class="stat-grid">
             <div class="stat"><div class="val text-green">4</div><div class="lbl">Actieve aanbiedingen</div></div>
@@ -1003,7 +991,6 @@ input[type=range]{width:100%;accent-color:var(--g)}
               </tbody>
             </table>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -1013,23 +1000,14 @@ input[type=range]{width:100%;accent-color:var(--g)}
      PAGE 5: MIJN VERKOPEN (trackingcode invoer)
 ══════════════════════════════════════════════ -->
 <div class="page" id="p-verkopen">
-  <div class="pg-header">
-    <div class="wrap">
-      <div class="breadcrumb">Marketplace <span>›</span> Mijn verkopen</div>
-      <h1>Mijn verkopen</h1>
+  <div style="background:#fff;border-bottom:2px solid var(--border);position:sticky;top:176px;z-index:50">
+    <div style="max-width:1160px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:0;overflow-x:auto">
+        <a href="#" onclick="go('aanbiedingen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aanbiedingen</a><a href="#" onclick="go('verkopen');return false" style="padding:12px 18px;font-size:13px;color:var(--g);border-bottom:3px solid var(--g);font-weight:700;text-decoration:none;white-space:nowrap;transition:.12s">Mijn verkopen</a><a href="#" onclick="go('aankopen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aankopen</a><a href="#" onclick="go('berichten');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Berichten <span style='background:#e8192c;color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px'>2</span></a><a href="#" onclick="go('plaatsen');return false" style="margin-left:auto;background:var(--g);color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">+ Nieuwe aanbieding</a>
     </div>
   </div>
   <div class="page-body">
     <div class="wrap">
-      <div class="dash-layout" style="display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start">
-        <div class="dash-nav" style="width:210px;min-width:210px;flex-shrink:0">
-          <a href="#" onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
-          <a class="on" href="#"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
-          <a href="#" onclick="go('aankopen');return false"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
-          <a href="#" onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
-          <a href="#" onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
-        </div>
-        <div>
+      <div>
           <div class="alert alert-orange">
             <span class="icon ion-ios-alert"></span>
             <div><strong>Actie vereist:</strong> 1 verkoop wacht op trackingcode. Voer in om je betaling te ontvangen.</div>
@@ -1080,7 +1058,6 @@ input[type=range]{width:100%;accent-color:var(--g)}
               </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -1090,23 +1067,11 @@ input[type=range]{width:100%;accent-color:var(--g)}
      PAGE 6: MIJN AANKOPEN
 ══════════════════════════════════════════════ -->
 <div class="page" id="p-aankopen">
-  <div class="pg-header">
-    <div class="wrap">
-      <div class="breadcrumb">Marketplace <span>›</span> Mijn aankopen</div>
-      <h1>Mijn aankopen</h1>
-    </div>
-  </div>
-  <div class="page-body">
-    <div class="wrap">
-      <div class="dash-layout" style="display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start">
-        <div class="dash-nav" style="width:210px;min-width:210px;flex-shrink:0">
-          <a href="#" onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
-          <a href="#" onclick="go('verkopen');return false"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
-          <a class="on" href="#"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
-          <a href="#" onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
-          <a href="#" onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
-        </div>
-        <div>
+  <div style="background:#fff;border-bottom:2px solid var(--border);position:sticky;top:176px;z-index:50">
+    <div style="max-width:1160px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:0;overflow-x:auto">
+        <a href="#" onclick="go('aanbiedingen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aanbiedingen</a><a href="#" onclick="go('verkopen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn verkopen</a><a href="#" onclick="go('aankopen');return false" style="padding:12px 18px;font-size:13px;color:var(--g);border-bottom:3px solid var(--g);font-weight:700;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aankopen</a><a href="#" onclick="go('berichten');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Berichten <span style='background:#e8192c;color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px'>2</span></a><a href="#" onclick="go('plaatsen');return false" style="margin-left:auto;background:var(--g);color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">+ Nieuwe aanbieding</a>
+      </div>
+      <div>
           <table class="mp-table">
             <thead><tr><th></th><th>Artikel</th><th>Verkoper</th><th>Betaald</th><th>Status</th><th>Actie</th></tr></thead>
             <tbody>
@@ -1155,7 +1120,6 @@ input[type=range]{width:100%;accent-color:var(--g)}
               <div class="f12 text-soft" style="white-space:nowrap">⏱ Auto in <strong>3 dagen</strong></div>
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -1367,12 +1331,6 @@ input[type=range]{width:100%;accent-color:var(--g)}
      PAGE 9: BERICHTEN
 ══════════════════════════════════════════════ -->
 <div class="page" id="p-berichten">
-  <div class="pg-header">
-    <div class="wrap">
-      <div class="breadcrumb">Marketplace <span>›</span> Berichten</div>
-      <h1><span class="icon ion-ios-chatbubbles"></span> Berichten</h1>
-    </div>
-  </div>
   <div class="page-body">
     <div class="wrap">
       <div style="display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start;min-height:520px">
