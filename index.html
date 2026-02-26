@@ -108,12 +108,13 @@ body{padding-top:40px}
 
 /* ══ LAYOUT ════════════════════════════════════════════════ */
 .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
-.page-body{padding:28px 0 60px}
+.page-body{padding:28px 0 80px}
 
 .pg-header{
   background:var(--w);border-bottom:1px solid var(--border);
   padding:24px 0 20px;margin-bottom:24px;
 }
+.pg-header h1{font-size:22px;font-weight:900;color:var(--t);margin-bottom:4px}
 .pg-header h1{font-size:21px;font-weight:800;color:var(--t);margin-bottom:3px}
 .pg-header p{font-size:14px;color:var(--ts)}
 .breadcrumb{font-size:12px;color:var(--ts);margin-bottom:8px}
@@ -122,7 +123,8 @@ body{padding-top:40px}
 
 .sidebar-layout{display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:start}
 .detail-layout{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
-.dash-layout{display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start;width:100%}
+.dash-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:22px;align-items:start}
+.dash-layout > *:first-child{width:210px;min-width:210px;max-width:210px}
 
 /* ══ CARD ══════════════════════════════════════════════════ */
 .card{
@@ -311,17 +313,22 @@ input[type=range]{width:100%;accent-color:var(--g)}
 .tlink-gray{color:var(--ts);cursor:pointer}.tlink-gray:hover{color:var(--tm)}
 
 /* ══ DASH NAV ═══════════════════════════════════════════════ */
-.dash-nav{background:var(--w);border:1px solid var(--border);border-radius:var(--r6);overflow:hidden;box-shadow:var(--sh)}
+.dash-nav{
+  background:var(--w);border:1px solid var(--border);border-radius:var(--r6);
+  overflow:hidden;box-shadow:var(--sh);
+  width:210px;min-width:210px;max-width:210px;
+  display:block;
+}
 .dash-nav a{
-  display:flex;align-items:center;gap:9px;padding:12px 16px;
+  display:flex !important;align-items:center;gap:9px;padding:12px 16px;
   font-size:13px;color:var(--tm);border-bottom:1px solid var(--border);
   cursor:pointer;transition:background .1s;text-decoration:none;
   width:100%;box-sizing:border-box;
 }
-.dash-nav a:last-child{border:none}
+.dash-nav a:last-child{border-bottom:none}
 .dash-nav a:hover{background:var(--bg)}
-.dash-nav a.on{background:var(--gl);color:var(--g);font-weight:700;border-left:3px solid var(--g)}
-.dash-nav .badge-n{background:var(--r);color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:auto}
+.dash-nav a.on{background:var(--gl);color:var(--g);font-weight:700;border-left:3px solid var(--g);padding-left:13px}
+.dash-nav .badge-n{background:var(--r);color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:auto;flex-shrink:0}
 
 /* ══ CHAT / BERICHTEN ═══════════════════════════════════════ */
 .chat-wrap{background:var(--w);border:1px solid var(--border);border-radius:var(--r6);overflow:hidden;display:flex;flex-direction:column;height:460px;box-shadow:var(--sh)}
@@ -363,7 +370,7 @@ input[type=range]{width:100%;accent-color:var(--g)}
 .timer.urgent .days{background:var(--r)}
 
 /* ══ STATS ══════════════════════════════════════════════════ */
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
 .stat{background:var(--w);border:1px solid var(--border);border-radius:var(--r6);padding:16px;text-align:center;box-shadow:var(--sh)}
 .stat .val{font-size:26px;font-weight:900;line-height:1}
 .stat .lbl{font-size:12px;color:var(--ts);margin-top:4px}
@@ -440,7 +447,7 @@ input[type=range]{width:100%;accent-color:var(--g)}
     <button onclick="go('checkout')">7. Checkout</button>
     <button onclick="go('klacht')">8. Klacht</button>
     <button onclick="go('berichten')">9. Berichten</button>
-    <button onclick="go('admin')" style="background:#7a1a0f;border-color:#a02020;color:#ffcccc">🔒 10. Admin</button>
+    <button onclick="go('admin')" style="background:#7a1a0f;border-color:#a02020;color:#ffcccc;margin-left:6px">🔒 Admin</button>
   </div>
 </div>
 
@@ -459,14 +466,24 @@ input[type=range]{width:100%;accent-color:var(--g)}
     </div>
   </div>
   <div class="hd-mid">
-    <a href="#" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0">
-      <img src="https://new.stripinfo.be/assets/images/logo.svg" 
-           alt="Stripinfo.be" 
-           style="height:50px;width:auto;display:block"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div style="display:none;align-items:flex-end;gap:0;line-height:1">
-        <div style="font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:26px;color:#000;letter-spacing:-1px">STRIPINFO</div>
-        <div style="background:#000;color:#fff;font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:13px;padding:3px 7px;border-radius:5px;margin-left:4px;margin-bottom:3px">!BE</div>
+    <a href="#" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0;gap:6px">
+      <!-- wavy speech lines -->
+      <svg width="22" height="54" viewBox="0 0 22 54" style="flex-shrink:0">
+        <path d="M4 12 Q8 9 12 12 Q16 15 20 12" stroke="#000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M2 19 Q7 16 12 19 Q17 22 22 19" stroke="#000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M4 26 Q8 23 12 26 Q16 29 20 26" stroke="#000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex;flex-direction:column;justify-content:center;line-height:1">
+        <div style="display:flex;align-items:flex-start;gap:4px">
+          <span style="font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:24px;color:#000;letter-spacing:-0.5px;line-height:1">STRIPINFO</span>
+          <div style="background:#000;border-radius:5px 5px 5px 0;padding:3px 8px;margin-top:2px;position:relative">
+            <span style="font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:12px;color:#fff">!BE</span>
+            <div style="position:absolute;bottom:-5px;left:4px;width:0;height:0;border-left:5px solid transparent;border-right:0px solid transparent;border-top:5px solid #000"></div>
+          </div>
+        </div>
+        <div style="font-family:Arial,sans-serif;font-size:8.5px;color:#000;letter-spacing:1.8px;margin-top:4px;text-transform:uppercase">
+          ALTIJD EEN <strong>STRIPJE</strong> VOOR
+        </div>
       </div>
     </a>
     <nav class="main-nav">
@@ -872,14 +889,14 @@ input[type=range]{width:100%;accent-color:var(--g)}
   </div>
   <div class="page-body">
     <div class="wrap">
-      <div class="dash-layout">
+      <div class="dash-layout" style="display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start">
         <!-- nav -->
-        <div class="dash-nav">
-          <a class="on" onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
-          <a onclick="go('verkopen');return false"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
-          <a onclick="go('aankopen');return false"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
-          <a onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
-          <a onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
+        <div class="dash-nav" style="width:210px;min-width:210px;flex-shrink:0">
+          <a class="on" href="#" onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
+          <a href="#" onclick="go('verkopen');return false"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
+          <a href="#" onclick="go('aankopen');return false"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
+          <a href="#" onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
+          <a href="#" onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
         </div>
 
         <!-- content -->
@@ -1003,13 +1020,13 @@ input[type=range]{width:100%;accent-color:var(--g)}
   </div>
   <div class="page-body">
     <div class="wrap">
-      <div class="dash-layout">
-        <div class="dash-nav">
+      <div class="dash-layout" style="display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start">
+        <div class="dash-nav" style="width:210px;min-width:210px;flex-shrink:0">
           <a onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
-          <a class="on"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
-          <a onclick="go('aankopen');return false"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
-          <a onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
-          <a onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
+          <a class="on" href="#"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
+          <a href="#" onclick="go('aankopen');return false"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
+          <a href="#" onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
+          <a href="#" onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
         </div>
         <div>
           <div class="alert alert-orange">
@@ -1080,13 +1097,13 @@ input[type=range]{width:100%;accent-color:var(--g)}
   </div>
   <div class="page-body">
     <div class="wrap">
-      <div class="dash-layout">
-        <div class="dash-nav">
+      <div class="dash-layout" style="display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start">
+        <div class="dash-nav" style="width:210px;min-width:210px;flex-shrink:0">
           <a onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
-          <a onclick="go('verkopen');return false"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
-          <a class="on"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
-          <a onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
-          <a onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
+          <a href="#" onclick="go('verkopen');return false"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
+          <a class="on" href="#"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
+          <a href="#" onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
+          <a href="#" onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
         </div>
         <div>
           <table class="mp-table">
@@ -1806,7 +1823,7 @@ document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==
 <footer style="background:#f5c800;border-top:4px solid #e0a800;margin-top:40px;padding:28px 0 16px">
   <div style="max-width:1160px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px">
     <div>
-      <img src="https://new.stripinfo.be/assets/images/logo.svg" style="height:42px;margin-bottom:12px" alt="Stripinfo" onerror="this.style.display='none'">
+      <img src="logo.avif" style="height:42px;margin-bottom:12px" alt="Stripinfo" onerror="this.style.display='none'">
       <p style="font-size:13px;color:#333;line-height:1.6">De grootste online strip community van België en Nederland.</p>
     </div>
     <div>
