@@ -550,17 +550,23 @@ input[type=range]{width:100%;accent-color:var(--g)}
               <label><input type="checkbox" checked> België</label>
               <label><input type="checkbox" checked> Nederland</label>
             </div>
-            <div class="filter-group">
-              <label style="font-size:12px;font-weight:700;color:var(--t);margin-bottom:6px;display:block">Sorteren</label>
-              <select><option>Nieuwste eerst</option><option>Prijs: laag → hoog</option><option>Prijs: hoog → laag</option></select>
-            </div>
+
           </div>
         </aside>
 
         <!-- Grid -->
         <div>
-          <div class="flex justify-between align-center mb12" style="margin-bottom:14px">
-            <span class="f13 text-soft">24 aanbiedingen gevonden</span>
+          <div class="flex justify-between align-center" style="margin-bottom:14px">
+            <span class="f13 text-soft"><strong>24</strong> aanbiedingen gevonden</span>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="f12 text-soft">Sorteren:</span>
+              <select style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;background:#fff">
+                <option>Nieuwste eerst</option>
+                <option>Prijs: laag → hoog</option>
+                <option>Prijs: hoog → laag</option>
+                <option>Beste staat eerst</option>
+              </select>
+            </div>
           </div>
           <div class="listing-grid">
             <!-- kaart 1 -->
@@ -716,12 +722,14 @@ input[type=range]{width:100%;accent-color:var(--g)}
               <div class="f12 text-soft">🇧🇪 Particulier · Antwerpen</div>
             </div>
 
+            <button class="btn btn-outline btn-block" onclick="go('berichten')" style="margin-bottom:8px"><span class="icon ion-ios-heart-outline"></span> Toevoegen aan verlanglijst</button>
             <div class="divider"></div>
-            <div class="f12 text-soft" style="line-height:1.9">
+            <div class="f12 text-soft" style="line-height:2">
               <div>🛡 5 dagen kopersbescherming</div>
               <div>🔒 Betaling via Stripe Connect</div>
-              <div><span class="tlink-gray" onclick="alert('Aanbieding melden — nog te implementeren')">⚠ Aanbieding melden</span></div>
             </div>
+            <div class="divider"></div>
+            <button class="btn btn-ghost btn-block btn-sm" onclick="document.getElementById('meld-modal').style.display='flex'" style="color:var(--r);border-color:#eec0bc;font-size:12px;margin-top:2px">⚠ Aanbieding of verkoper melden</button>
           </div>
         </div>
       </div>
@@ -1174,31 +1182,84 @@ input[type=range]{width:100%;accent-color:var(--g)}
       </div>
       <div style="display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start">
         <div>
-          <div class="form-section">
-            <h3>Leveringsadres</h3>
-            <div class="col2">
-              <div class="form-group"><label>Voornaam <span class="req">*</span></label><input type="text" value="Christophe"></div>
-              <div class="form-group"><label>Achternaam <span class="req">*</span></label><input type="text" value="Declercq"></div>
+          <div id="stap-adres">
+            <div class="form-section">
+              <h3>Leveringsadres</h3>
+              <div class="col2">
+                <div class="form-group"><label>Voornaam <span class="req">*</span></label><input type="text" value="Christophe"></div>
+                <div class="form-group"><label>Achternaam <span class="req">*</span></label><input type="text" value="Declercq"></div>
+              </div>
+              <div class="form-group"><label>Straat en nummer <span class="req">*</span></label><input type="text" value="Grote Markt 1"></div>
+              <div class="col3">
+                <div class="form-group"><label>Postcode <span class="req">*</span></label><input type="text" value="9000"></div>
+                <div class="form-group"><label>Gemeente <span class="req">*</span></label><input type="text" value="Gent"></div>
+                <div class="form-group"><label>Land</label><select><option>België</option><option>Nederland</option></select></div>
+              </div>
+              <div class="form-group"><label>Leveringsinstructies (optioneel)</label><input type="text" placeholder="bijv. bel aan, 2de verdieping"></div>
+              <button class="btn btn-green btn-lg btn-block" onclick="
+                document.getElementById('stap-adres').style.display='none';
+                document.getElementById('stap-betaling').style.display='block';
+                document.querySelectorAll('#p-checkout .step')[0].className='step done';
+                document.querySelectorAll('#p-checkout .step')[1].className='step now';
+                document.querySelectorAll('#p-checkout .step-line')[0].className='step-line done';
+              ">Verder naar betaling →</button>
             </div>
-            <div class="form-group"><label>Straat en nummer <span class="req">*</span></label><input type="text" value="Grote Markt 1"></div>
-            <div class="col3">
-              <div class="form-group"><label>Postcode <span class="req">*</span></label><input type="text" value="9000"></div>
-              <div class="form-group"><label>Gemeente <span class="req">*</span></label><input type="text" value="Gent"></div>
-              <div class="form-group"><label>Land</label><select><option>België</option><option>Nederland</option></select></div>
-            </div>
-            <div class="form-group"><label>Leveringsinstructies (optioneel)</label><input type="text" placeholder="bijv. bel aan, 2de verdieping"></div>
-            <button class="btn btn-green btn-lg btn-block" onclick="go('aankopen')">Verder naar betaling →</button>
           </div>
-          <div class="form-section">
-            <h3>Betaling via Stripe</h3>
-            <div class="alert alert-green mb12">
-              <span class="icon ion-ios-lock"></span>
-              <span>Betaling via Stripe — geld pas vrijgegeven na bevestiging ontvangst</span>
+          <div id="stap-betaling" style="display:none">
+            <div class="form-section">
+              <h3>Betaalmethode</h3>
+              <div class="alert alert-green" style="margin-bottom:16px">
+                <span class="icon ion-ios-lock"></span>
+                <span>Je betaling wordt vastgehouden in escrow — pas vrijgegeven als jij ontvangst bevestigt</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+                <label style="border:2px solid var(--g);border-radius:8px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:10px;background:var(--gl)">
+                  <input type="radio" name="betaal" checked style="accent-color:var(--g)">
+                  <span style="font-size:22px">🏦</span>
+                  <div><div class="fw7 f13">Bancontact</div><div class="f11 text-soft">Belgische banken</div></div>
+                </label>
+                <label style="border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:10px">
+                  <input type="radio" name="betaal" style="accent-color:var(--g)">
+                  <span style="font-size:22px">💳</span>
+                  <div><div class="fw7 f13">Visa / Mastercard</div><div class="f11 text-soft">Creditcard</div></div>
+                </label>
+                <label style="border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:10px">
+                  <input type="radio" name="betaal" style="accent-color:var(--g)">
+                  <span style="font-size:22px">🇳🇱</span>
+                  <div><div class="fw7 f13">iDEAL</div><div class="f11 text-soft">Nederlandse banken</div></div>
+                </label>
+                <label style="border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:10px">
+                  <input type="radio" name="betaal" style="accent-color:var(--g)">
+                  <span style="font-size:22px">📱</span>
+                  <div><div class="fw7 f13">Payconiq</div><div class="f11 text-soft">Via app</div></div>
+                </label>
+              </div>
+              <div style="background:#f8f8f8;border:1px solid var(--border);border-radius:var(--r6);padding:16px;text-align:center;margin-bottom:16px">
+                <div style="font-size:13px;color:var(--ts);margin-bottom:8px">Beveiligd door</div>
+                <span style="background:#635bff;color:#fff;border-radius:4px;padding:4px 14px;font-size:14px;font-weight:700">stripe</span>
+              </div>
+              <div style="display:flex;gap:10px">
+                <button class="btn btn-ghost" onclick="document.getElementById('stap-betaling').style.display='none';document.getElementById('stap-adres').style.display='block';document.querySelectorAll('#p-checkout .step')[0].className='step now';document.querySelectorAll('#p-checkout .step')[1].className='step todo';document.querySelectorAll('#p-checkout .step-line')[0].className='step-line';">← Adres aanpassen</button>
+                <button class="btn btn-green btn-lg" style="flex:1" onclick="
+                  document.getElementById('stap-betaling').style.display='none';
+                  document.getElementById('stap-bevestiging').style.display='block';
+                  document.querySelectorAll('#p-checkout .step')[1].className='step done';
+                  document.querySelectorAll('#p-checkout .step')[2].className='step now';
+                  document.querySelectorAll('#p-checkout .step-line')[1].className='step-line done';
+                ">🔒 Betaal € 12,00</button>
+              </div>
             </div>
-            <div style="background:#f8f8f8;border:1px solid var(--border);border-radius:var(--r6);padding:24px;text-align:center;color:var(--ts)">
-              <div style="font-size:36px;margin-bottom:8px">🔒</div>
-              <strong style="color:var(--t);font-size:15px">Stripe Checkout</strong><br>
-              <span class="f13">Bancontact · Visa · Mastercard · iDEAL</span>
+          </div>
+          <div id="stap-bevestiging" style="display:none">
+            <div class="form-section" style="text-align:center;padding:40px 24px">
+              <div style="font-size:56px;margin-bottom:16px">✅</div>
+              <h3 style="font-size:20px;margin-bottom:8px">Bestelling geplaatst!</h3>
+              <p class="f13 text-soft" style="margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto">Je betaling van <strong>€ 12,00</strong> is veilig vastgehouden. Zodra wouter_strips verzendt, ontvang je de trackingcode. Bevestig ontvangst om betaling vrij te geven.</p>
+              <div class="alert alert-green" style="text-align:left;margin-bottom:20px">
+                <span>📦</span>
+                <span>Verwachte verzending: <strong>binnen 3 werkdagen</strong> · Tracking via bpost</span>
+              </div>
+              <button class="btn btn-green" onclick="go('aankopen')">Ga naar mijn aankopen →</button>
             </div>
           </div>
         </div>
@@ -1285,10 +1346,13 @@ input[type=range]{width:100%;accent-color:var(--g)}
               <div><div class="fw7 f13">Harvest Moons</div><div class="text-green fw7">€ 14,50</div></div>
             </div>
             <div class="alert alert-orange" style="margin-bottom:12px">⏱ Bedrag in escrow — niet vrijgegeven tot beslissing</div>
-            <div class="f12 text-soft" style="line-height:1.9">
-              <div>📸 Bewijs toevoegen via thread</div>
+            <div class="f12 text-soft" style="line-height:1.9;margin-bottom:12px">
               <div>⚖️ Admin beslist binnen 21 dagen</div>
               <div>↩ Bij gelijk: volledige terugbetaling</div>
+            </div>
+            <div style="border:2px dashed var(--border);border-radius:6px;padding:12px;text-align:center;cursor:pointer;font-size:12px;color:var(--ts)" onclick="alert('Foto uploaden — max 5 bestanden')">
+              📸 <strong>Bewijs toevoegen</strong><br>
+              <span style="font-size:11px">Foto's van schade · max 5MB</span>
             </div>
             <div class="divider"></div>
             <button class="btn btn-ghost btn-block btn-sm" onclick="go('aankopen')">← Terug naar aankopen</button>
@@ -1320,11 +1384,11 @@ input[type=range]{width:100%;accent-color:var(--g)}
             <div class="cm">Re: Alya Tome 5 — Is de rug...</div>
             <span style="background:var(--r);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px">1</span>
           </div>
-          <div class="conv-item" onclick="this.classList.add('on');document.querySelectorAll('.conv-item').forEach(e=>e!==this&&e.classList.remove('on'))">
+          <div class="conv-item" onclick="switchConv(this,'jan_strips_be','Malanotte','gisteren',[{w:false,txt:'Bedankt voor de vlotte levering! Strip was perfect verpakt.',ts:'gisteren 11:02'},{w:true,txt:'Fijn te horen! Veel plezier ermee.',ts:'gisteren 11:45'}])">
             <div class="flex justify-between"><span class="cn">jan_strips_be</span><span class="ct">gisteren</span></div>
             <div class="cm">Bedankt voor de vlotte levering!</div>
           </div>
-          <div class="conv-item" onclick="this.classList.add('on');document.querySelectorAll('.conv-item').forEach(e=>e!==this&&e.classList.remove('on'))">
+          <div class="conv-item" onclick="switchConv(this,'stripkoning_nl','Harvest Moons','3 dagen',[{w:true,txt:'Hoi, is het pakket al verzonden?',ts:'3 dagen 09:10'},{w:false,txt:'Ja, ik stuur morgen op met trackingcode.',ts:'3 dagen 10:22'},{w:true,txt:'Ok super, bedankt!',ts:'3 dagen 10:35'}])">
             <div class="flex justify-between"><span class="cn">stripkoning_nl</span><span class="ct">3 dagen</span></div>
             <div class="cm">Ik stuur morgen op</div>
           </div>
@@ -1402,6 +1466,11 @@ function activateStap2() {
   document.getElementById('stap2-wrap').style.display = 'block';
   document.querySelector('.isbn-box').style.borderColor = 'var(--g)';
   document.querySelector('.isbn-box').style.background = 'var(--gl)';
+  const steps = document.querySelectorAll('#p-plaatsen .step');
+  if(steps[0]) steps[0].className = 'step done';
+  if(steps[1]) steps[1].className = 'step now';
+  const lines = document.querySelectorAll('#p-plaatsen .step-line');
+  if(lines[0]) lines[0].className = 'step-line done';
   document.getElementById('stap2-wrap').scrollIntoView({behavior:'smooth'});
 }
 
@@ -1476,7 +1545,57 @@ function sendMsg() {
   inp.value = '';
 }
 document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==='Enter') sendMsg(); });
+
+// ── GESPREK WISSELEN ──────────────────────────
+function switchConv(el, naam, artikel, tijd, berichten) {
+  document.querySelectorAll('.conv-item').forEach(e => e.classList.remove('on'));
+  el.classList.add('on');
+  const head = document.querySelector('#p-berichten .chat-head');
+  head.innerHTML = `<span>${naam}</span><span class="f12 text-soft">${artikel} · <span class="tlink" onclick="go('detail')">Bekijk aanbieding →</span></span>`;
+  const msgs = document.querySelector('#p-berichten .chat-msgs');
+  msgs.innerHTML = berichten.map(b => `
+    <div class="msg ${b.w ? 'me' : 'other'}">
+      ${!b.w ? `<div class="who">${naam}</div>` : ''}
+      <div class="bubble">${b.txt}</div>
+      <div class="ts">${b.ts}</div>
+    </div>
+  `).join('');
+  msgs.scrollTo({top: 99999, behavior: 'smooth'});
+}
 </script>
+
+<!-- NOTITIE MODAL -->
+<div id="notitie-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:10px;padding:28px;width:440px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+    <div style="font-size:17px;font-weight:800;margin-bottom:4px">📝 Interne notitie toevoegen</div>
+    <div style="font-size:12px;color:#999;margin-bottom:6px">Enkel zichtbaar voor moderators en admins — niet voor de gebruiker</div>
+    <div style="font-size:11px;font-weight:700;color:#555;margin-bottom:12px;padding:8px;background:#f5f5f5;border-radius:6px">
+      Gebruiker: <strong>wouter_strips</strong> · Risk score: <strong style="color:#c0392b">78</strong> · Status: <strong>In review</strong>
+    </div>
+    <div style="margin-bottom:14px">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Notitie <span style="color:#c0392b">*</span></label>
+      <textarea rows="4" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:inherit" placeholder="Beschrijf de situatie, bewijs, of genomen stappen..."></textarea>
+    </div>
+    <div style="margin-bottom:18px">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Gekoppelde actie (optioneel)</label>
+      <select style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit">
+        <option value="">— Geen actie —</option>
+        <option>Account in review gezet</option>
+        <option>Waarschuwing verstuurd</option>
+        <option>Koopfunctie uitgeschakeld</option>
+        <option>Verkoopfunctie uitgeschakeld</option>
+        <option>Berichtenfunctie beperkt</option>
+        <option>Uitbetaling on hold</option>
+        <option>Tijdelijk geblokkeerd</option>
+        <option>Permanent geblokkeerd</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button onclick="document.getElementById('notitie-modal').style.display='none'" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:6px;background:#f5f5f5;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Annuleren</button>
+      <button onclick="document.getElementById('notitie-modal').style.display='none';alert('Notitie opgeslagen en gelogd in audit trail')" style="flex:2;padding:10px;border:none;border-radius:6px;background:#1a4a8a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">💾 Notitie opslaan</button>
+    </div>
+  </div>
+</div>
 
 <!-- MELD MODAL -->
 <div id="meld-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;align-items:center;justify-content:center">
@@ -1523,7 +1642,12 @@ document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==
 <div class="page" id="p-admin">
   <div style="background:linear-gradient(135deg,#1a0a0a,#4a1010);padding:24px 0 20px;margin-bottom:0">
     <div class="wrap">
-      <div style="color:rgba(255,255,255,.5);font-size:12px;margin-bottom:6px">🔒 Beperkte toegang — Moderator / Admin</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <span style="color:rgba(255,255,255,.5);font-size:12px">🔒 Ingelogd als:</span>
+        <span style="background:#7a1fa2;color:#fff;border-radius:4px;padding:2px 10px;font-size:11px;font-weight:800">SUPERADMIN</span>
+        <span style="color:rgba(255,255,255,.3);font-size:11px">· Alle acties toegestaan</span>
+        <span style="margin-left:auto;font-size:11px;color:rgba(255,255,255,.4)">Rollen: superadmin · finance_admin · moderator</span>
+      </div>
       <h1 style="color:#fff;font-size:21px;font-weight:800;margin-bottom:3px">⚙ Moderatie &amp; Veiligheid Dashboard</h1>
       <p style="color:rgba(255,255,255,.6);font-size:13px">Anti-scam · Gebruikersbeheer · Payout controls · Audit trail</p>
     </div>
@@ -1615,29 +1739,33 @@ document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==
         <div class="flex gap12 mb12" style="margin-bottom:14px">
           <input type="text" placeholder="Zoek gebruiker..." style="flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit">
           <select style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit">
-            <option>Alle statussen</option><option>Actief</option><option>In review</option><option>Geblokkeerd</option>
+            <option>Alle statussen</option><option>Actief</option><option>Beperkt</option><option>In review</option><option>Tijdelijk geblokkeerd</option><option>Permanent geblokkeerd</option>
           </select>
         </div>
         <table class="mp-table">
-          <thead><tr><th>Gebruiker</th><th>Lid sinds</th><th>Risk score</th><th>Status</th><th>Meldingen</th><th>Payout</th><th>Actie</th></tr></thead>
+          <thead><tr><th>Gebruiker</th><th>Lid sinds</th><th>Risk score</th><th>Account status</th><th>Kopen</th><th>Verkopen</th><th>Berichten</th><th>Uitbetaling</th><th>Meld.</th><th>Actie</th></tr></thead>
           <tbody>
             <tr style="background:#fff8f8">
               <td><strong>wouter_strips</strong><br><span class="f11 text-soft">BE · 47 verkopen</span></td>
               <td class="f12 text-soft">Jan 2022</td>
               <td>
                 <div style="display:flex;align-items:center;gap:8px">
-                  <div style="width:80px;height:8px;background:#eee;border-radius:4px;overflow:hidden">
+                  <div style="width:60px;height:8px;background:#eee;border-radius:4px;overflow:hidden">
                     <div style="width:78%;height:100%;background:#c0392b;border-radius:4px"></div>
                   </div>
                   <span class="f12 fw7" style="color:#c0392b">78</span>
                 </div>
               </td>
               <td><span class="badge badge-orange">In review</span></td>
+              <td><span class="badge badge-red" title="Koopfunctie geblokkeerd">✗</span></td>
+              <td><span class="badge badge-red" title="Verkoopfunctie geblokkeerd">✗</span></td>
+              <td><span class="badge badge-orange" title="Berichten beperkt">⚠</span></td>
+              <td><span class="badge badge-red" title="Uitbetaling on hold">Hold</span></td>
               <td class="f13 text-red fw7">3</td>
-              <td><span class="badge badge-red">On hold</span></td>
-              <td class="f12" style="display:flex;gap:6px">
-                <button onclick="alert('Account geblokkeerd')" class="btn btn-sm btn-red" style="font-size:11px">Blokkeer</button>
-                <button onclick="alert('Als veilig gemarkeerd')" class="btn btn-sm btn-ghost" style="font-size:11px">✓ Veilig</button>
+              <td style="display:flex;gap:4px;flex-wrap:wrap">
+                <button onclick="alert('Account wouter_strips geblokkeerd')" class="btn btn-sm btn-red" style="font-size:11px">Blokkeer</button>
+                <button onclick="alert('Account wouter_strips gedeblokkeerd — status: actief')" class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--g)">Deblokkeer</button>
+                <button onclick="document.getElementById('notitie-modal').style.display='flex'" class="btn btn-sm btn-ghost" style="font-size:11px">📝 Notitie</button>
               </td>
             </tr>
             <tr>
@@ -1645,17 +1773,21 @@ document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==
               <td class="f12 text-soft">Mrt 2023</td>
               <td>
                 <div style="display:flex;align-items:center;gap:8px">
-                  <div style="width:80px;height:8px;background:#eee;border-radius:4px;overflow:hidden">
+                  <div style="width:60px;height:8px;background:#eee;border-radius:4px;overflow:hidden">
                     <div style="width:45%;height:100%;background:#c8701e;border-radius:4px"></div>
                   </div>
                   <span class="f12 fw7" style="color:#c8701e">45</span>
                 </div>
               </td>
               <td><span class="badge badge-blue">In review</span></td>
+              <td><span class="badge badge-green" title="Kopen toegestaan">✓</span></td>
+              <td><span class="badge badge-orange" title="Verkopen beperkt">⚠</span></td>
+              <td><span class="badge badge-green" title="Berichten ok">✓</span></td>
+              <td><span class="badge badge-orange" title="Uitbetaling vertraagd">Vertr.</span></td>
               <td class="f13 fw7" style="color:var(--o)">1</td>
-              <td><span class="badge badge-orange">Vertraagd</span></td>
-              <td class="f12" style="display:flex;gap:6px">
-                <button class="btn btn-sm btn-ghost" style="font-size:11px">Bekijk</button>
+              <td style="display:flex;gap:4px;flex-wrap:wrap">
+                <button onclick="alert('Als veilig gemarkeerd — status: actief')" class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--g)">✓ Veilig</button>
+                <button onclick="document.getElementById('notitie-modal').style.display='flex'" class="btn btn-sm btn-ghost" style="font-size:11px">📝 Notitie</button>
               </td>
             </tr>
             <tr>
@@ -1663,15 +1795,18 @@ document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==
               <td class="f12 text-soft">Nov 2024</td>
               <td>
                 <div style="display:flex;align-items:center;gap:8px">
-                  <div style="width:80px;height:8px;background:#eee;border-radius:4px;overflow:hidden">
+                  <div style="width:60px;height:8px;background:#eee;border-radius:4px;overflow:hidden">
                     <div style="width:12%;height:100%;background:#1f7a45;border-radius:4px"></div>
                   </div>
                   <span class="f12 fw7" style="color:#1f7a45">12</span>
                 </div>
               </td>
               <td><span class="badge badge-green">Actief</span></td>
+              <td><span class="badge badge-green" title="Kopen toegestaan">✓</span></td>
+              <td><span class="badge badge-green" title="Verkopen toegestaan">✓</span></td>
+              <td><span class="badge badge-green" title="Berichten ok">✓</span></td>
+              <td><span class="badge badge-green" title="Uitbetaling ok">OK</span></td>
               <td class="f13 text-soft">0</td>
-              <td><span class="badge badge-green">OK</span></td>
               <td class="f12"><span class="tlink-gray">—</span></td>
             </tr>
           </tbody>
@@ -1719,7 +1854,10 @@ document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==
         </table>
         <div class="alert alert-blue" style="margin-top:16px">
           <span>ℹ</span>
-          <span>Automatische detectie actief op: e-mailadressen · telefoonnummers · IBAN-nummers · externe betaallinks · "WhatsApp mij" · "betaal buiten platform" · "overschrijven" · "mail mij rechtstreeks"</span>
+          <div>
+            <strong>Automatische detectie actief op:</strong> e-mailadressen · telefoonnummers · IBAN-nummers · externe betaallinks · "WhatsApp mij" · "betaal buiten platform" · "overschrijven" · "mail mij rechtstreeks" · "contacteer mij privé" · "stuur mij rechtstreeks"<br>
+            <span style="margin-top:6px;display:block"><strong>Automatische drempels:</strong> risk score &gt;50 → beperkt · &gt;70 → berichtenfunctie beperkt · &gt;85 → tijdelijk geblokkeerd · manuele review vereist boven 70</span>
+          </div>
         </div>
       </div>
 
@@ -1799,6 +1937,27 @@ document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==
               <td><span class="badge badge-red">Account geblokkeerd</span></td>
               <td class="f13">unknownuser99</td>
               <td class="f12 text-soft">Permanent geblokkeerd — herhaaldelijke scam pogingen (2x IBAN, 1x telefoon)</td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">23/02 11:14</td>
+              <td class="f12 fw7" style="color:#7a1fa2">finance_admin</td>
+              <td><span class="badge badge-orange">Payout vrijgegeven</span></td>
+              <td class="f13">jan_strips_be</td>
+              <td class="f12 text-soft">Payout € 34,50 manueel vrijgegeven na review — geen risico vastgesteld</td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">22/02 09:40</td>
+              <td class="f12 fw7">moderator1</td>
+              <td><span class="badge badge-orange">Tijdelijk geblokkeerd</span></td>
+              <td class="f13">unknownuser99</td>
+              <td class="f12 text-soft">Tijdelijk geblokkeerd (48u) — verdacht aanmeldgedrag, 3x accounts vanaf zelfde IP</td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">22/02 09:38</td>
+              <td class="f12 fw7">systeem</td>
+              <td><span class="badge badge-blue">Berichtenfunctie beperkt</span></td>
+              <td class="f13">unknownuser99</td>
+              <td class="f12 text-soft">Automatisch beperkt — risk score drempel (>70) bereikt. Manuele review vereist.</td>
             </tr>
           </tbody>
         </table>
