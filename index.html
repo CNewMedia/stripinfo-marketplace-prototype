@@ -52,52 +52,59 @@ img{display:block}
 #pb .pnav button.on{background:var(--g);color:#fff;border-color:var(--g)}
 body{padding-top:40px}
 
-/* ══ SITE HEADER (exact stripinfo.be structuur) ═══════════ */
+/* ══ SITE HEADER (exact stripinfo.be kleuren) ═══════════ */
 .site-header{
   position:sticky;top:40px;z-index:100;
-  background:var(--w);box-shadow:0 2px 8px rgba(0,0,0,.09);
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
 }
+/* gele topbar */
 .hd-top{
-  background:#f6f6f6;border-bottom:1px solid #e8e8e8;
+  background:#f5c800;
   padding:7px 28px;display:flex;justify-content:space-between;align-items:center;
 }
-.hd-top-l .tt{font-size:13px;font-weight:700;color:var(--t)}
-.hd-top-l .ts{font-size:11px;color:var(--ts)}
-.hd-top-r{display:flex;align-items:center;gap:18px;font-size:13px}
-.hd-top-r a{color:var(--tm);transition:color .12s}
-.hd-top-r a:hover{color:var(--g)}
+.hd-top-l .tt{font-size:13px;font-weight:900;color:#000;text-transform:uppercase;letter-spacing:.3px}
+.hd-top-l .ts{font-size:11px;color:#d44000;font-weight:700}
+.hd-top-r{display:flex;align-items:center;gap:14px;font-size:13px;font-weight:700;color:#000}
+.hd-top-r a{color:#000;text-decoration:none}
+.logout-btn{
+  background:#000;color:#fff;border:2px solid #000;border-radius:20px;
+  padding:3px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:.12s;
+}
+.logout-btn:hover{background:#333}
+/* blauwe middenbalk */
 .hd-mid{
-  padding:0 28px;display:flex;align-items:center;height:58px;gap:16px;
+  background:#29b5e8;
+  padding:0 28px;display:flex;align-items:center;height:68px;gap:16px;
 }
 .logo-wrap{
-  display:block;width:150px;height:38px;flex-shrink:0;
-  background:url('https://new.stripinfo.be/assets/images/logo.svg') left center/contain no-repeat;
-  overflow:hidden;color:transparent;font-size:0;
+  display:block;flex-shrink:0;text-decoration:none;
 }
+.logo-wrap img{height:54px;width:auto;display:block}
 .main-nav{display:flex;align-items:center;gap:2px;margin-left:auto}
 .main-nav a{
-  padding:7px 13px;border-radius:4px;font-size:13px;font-weight:600;
-  color:var(--tm);transition:all .12s;
+  padding:8px 14px;border-radius:20px;font-size:14px;font-weight:700;
+  color:#000;transition:all .12s;text-decoration:none;
 }
-.main-nav a:hover{background:#f0f0f0;color:var(--t)}
-.main-nav a.active{color:var(--t)}
+.main-nav a:hover{background:rgba(0,0,0,.15)}
+.main-nav a.nav-active{background:#000;color:#fff}
 .main-nav a.mp-pill{
-  background:var(--g);color:#fff !important;
-  border-radius:20px;padding:7px 16px;font-weight:700;
+  background:#000;color:#fff !important;
+  border-radius:20px;padding:8px 18px;font-weight:800;
 }
-.main-nav a.mp-pill:hover{background:var(--gd)}
+.main-nav a.mp-pill:hover{background:#333}
+/* zwarte accountbalk */
 .hd-acc{
-  background:#f6f6f6;border-top:1px solid #e8e8e8;
-  padding:5px 28px;display:flex;gap:0;overflow-x:auto;
+  background:#111;
+  padding:0 28px;display:flex;overflow-x:auto;
 }
 .hd-acc a{
-  padding:5px 14px;font-size:12px;color:var(--tm);
-  border-right:1px solid #e8e8e8;white-space:nowrap;
-  transition:background .12s,color .12s;
+  padding:9px 16px;font-size:13px;color:#bbb;font-weight:600;
+  white-space:nowrap;transition:color .12s;text-decoration:none;
+  border-bottom:3px solid transparent;
 }
-.hd-acc a:first-child{padding-left:0}
-.hd-acc a:hover{color:var(--g);background:#edf8f2}
-.hd-acc a.active{color:var(--g);font-weight:700}
+.hd-acc a:hover{color:#fff}
+.hd-acc a.active{color:#fff;border-bottom-color:#f5c800}
 
 /* ══ LAYOUT ════════════════════════════════════════════════ */
 .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
@@ -445,12 +452,14 @@ input[type=range]{width:100%;accent-color:var(--g)}
       <div class="ts">Beheer je verzameling en verkoop je dubbele items</div>
     </div>
     <div class="hd-top-r">
-      <strong>Welkom Christophe</strong>
-      <a href="#">Logout</a>
+      <span>Welkom Christophe</span>
+      <button class="logout-btn">Logout</button>
     </div>
   </div>
   <div class="hd-mid">
-    <a class="logo-wrap" href="#">Stripinfo</a>
+    <a class="logo-wrap" href="#">
+      <img src="https://new.stripinfo.be/assets/images/logo.svg" alt="Stripinfo.be" onerror="this.onerror=null;this.src='https://new.stripinfo.be/assets/images/favicons/apple-touch-icon.png';this.style.height='48px'">
+    </a>
     <nav class="main-nav">
       <a href="#">Home</a>
       <a href="#">Strips</a>
@@ -467,7 +476,7 @@ input[type=range]{width:100%;accent-color:var(--g)}
     <a href="#" onclick="go('aanbiedingen');return false" id="acc-aanbiedingen">Mijn aanbiedingen</a>
     <a href="#" onclick="go('aankopen');return false" id="acc-aankopen">Mijn aankopen</a>
     <a href="#" onclick="go('verkopen');return false" id="acc-verkopen">Mijn verkopen</a>
-    <a href="#" onclick="go('berichten');return false" id="acc-berichten">Berichten <span style="background:var(--r);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:3px">2</span></a>
+    <a href="#" onclick="go('berichten');return false" id="acc-berichten">Berichten <span style="background:#e8192c;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:3px">2</span></a>
     <a href="#">Mijn account</a>
   </div>
 </header>
@@ -1428,5 +1437,38 @@ function sendMsg() {
 }
 document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==='Enter') sendMsg(); });
 </script>
+
+<!-- FOOTER -->
+<footer style="background:#f5c800;border-top:4px solid #e0a800;margin-top:40px;padding:28px 0 16px">
+  <div style="max-width:1160px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px">
+    <div>
+      <img src="https://new.stripinfo.be/assets/images/logo.svg" style="height:42px;margin-bottom:12px" alt="Stripinfo" onerror="this.style.display='none'">
+      <p style="font-size:13px;color:#333;line-height:1.6">De grootste online strip community van België en Nederland.</p>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#000;margin-bottom:10px">Marketplace</div>
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:13px">
+        <a href="#" onclick="go('overzicht');return false" style="color:#333;text-decoration:none">Overzicht</a>
+        <a href="#" onclick="go('plaatsen');return false" style="color:#333;text-decoration:none">Strip verkopen</a>
+        <a href="#" onclick="go('aanbiedingen');return false" style="color:#333;text-decoration:none">Mijn aanbiedingen</a>
+        <a href="#" style="color:#333;text-decoration:none">Hoe werkt het?</a>
+        <a href="#" style="color:#333;text-decoration:none">Commissie &amp; tarieven</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#000;margin-bottom:10px">Info</div>
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:13px">
+        <a href="#" style="color:#333;text-decoration:none">Algemene voorwaarden</a>
+        <a href="#" style="color:#333;text-decoration:none">Privacybeleid</a>
+        <a href="#" style="color:#333;text-decoration:none">Cookiebeleid</a>
+        <a href="#" style="color:#333;text-decoration:none">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1160px;margin:20px auto 0;padding:16px 28px 0;border-top:1px solid rgba(0,0,0,.15);font-size:12px;color:#555;display:flex;justify-content:space-between">
+    <span>© 2026 Stripinfo.be — Alle rechten voorbehouden</span>
+    <span>Betalingen via <strong>Stripe</strong> 🔒</span>
+  </div>
+</footer>
 </body>
 </html>
