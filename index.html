@@ -51,67 +51,77 @@ img{display:block}
 #pb .pnav button.on{background:var(--g);color:#fff;border-color:var(--g)}
 body{padding-top:40px}
 
-/* ══ SITE HEADER (exact stripinfo.be kleuren) ═══════════ */
+/* ══ SITE HEADER — één balk ══════════════════════════════ */
 .site-header{
   position:sticky;top:40px;z-index:100;
-  box-shadow:0 2px 8px rgba(0,0,0,.2);
+  background:#fff;
+  border-bottom:2px solid var(--border);
+  box-shadow:0 1px 6px rgba(0,0,0,.08);
+  height:60px;display:flex;align-items:center;
 }
-/* gele topbar */
-.hd-top{
-  background:#f5c800;
-  padding:7px 28px;display:flex;justify-content:space-between;align-items:center;
+.hd-inner{
+  max-width:1160px;margin:0 auto;padding:0 28px;
+  width:100%;display:flex;align-items:center;gap:20px;
 }
-.hd-top-l .tt{font-size:13px;font-weight:900;color:#000;text-transform:uppercase;letter-spacing:.3px}
-.hd-top-l .ts{font-size:11px;color:#d44000;font-weight:700}
-.hd-top-r{display:flex;align-items:center;gap:14px;font-size:13px;font-weight:700;color:#000}
-.hd-top-r a{color:#000;text-decoration:none}
+/* logo */
+.hd-logo{display:flex;align-items:center;flex-shrink:0;text-decoration:none}
+.hd-logo img{height:36px;width:auto}
+/* zoekbalk in header */
+.hd-search{
+  flex:1;display:flex;
+  background:#f2f2f2;border:1.5px solid var(--border);border-radius:8px;
+  overflow:hidden;transition:border-color .15s;max-width:500px;
+}
+.hd-search:focus-within{border-color:var(--g);background:#fff}
+.hd-search input{
+  flex:1;padding:8px 12px;border:none;background:transparent;
+  font-size:13px;font-family:inherit;outline:none;color:var(--t);
+}
+.hd-search button{
+  background:var(--g);color:#fff;border:none;
+  padding:0 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:background .12s;
+}
+.hd-search button:hover{background:var(--gd)}
+/* nav rechts */
+.hd-nav{display:flex;align-items:center;gap:4px;margin-left:auto;flex-shrink:0}
+.hd-nav a{
+  padding:7px 12px;border-radius:6px;font-size:13px;font-weight:600;
+  color:var(--tm);text-decoration:none;transition:all .12s;white-space:nowrap;
+}
+.hd-nav a:hover{background:var(--bg);color:var(--t)}
+.hd-nav a.active{color:var(--g);font-weight:700}
+.hd-nav .hd-badge{
+  position:relative;display:inline-flex;align-items:center;
+}
+.hd-nav .hd-badge .dot{
+  position:absolute;top:-2px;right:-2px;
+  width:8px;height:8px;background:var(--r);border-radius:50%;border:2px solid #fff;
+}
+.hd-sell-btn{
+  background:var(--g);color:#fff !important;border-radius:20px;
+  padding:7px 16px !important;font-weight:700 !important;margin-left:4px;
+}
+.hd-sell-btn:hover{background:var(--gd) !important}
+.hd-avatar{
+  width:32px;height:32px;border-radius:50%;background:var(--g);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:#fff;cursor:pointer;flex-shrink:0;
+}
 .logout-btn{
-  background:#000;color:#fff;border:2px solid #000;border-radius:20px;
-  padding:3px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
+  background:transparent;color:var(--tm);border:1px solid var(--border);border-radius:6px;
+  padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;
   transition:.12s;
 }
-.logout-btn:hover{background:#333}
-/* blauwe middenbalk */
-.hd-mid{
-  background:#29b5e8;
-  padding:0 28px;display:flex;align-items:center;height:68px;gap:16px;
-}
-.logo-wrap{
-  display:block;flex-shrink:0;text-decoration:none;
-}
-.logo-wrap img{height:54px;width:auto;display:block}
-.main-nav{display:flex;align-items:center;gap:2px;margin-left:auto}
-.main-nav a{
-  padding:8px 14px;border-radius:20px;font-size:14px;font-weight:700;
-  color:#000;transition:all .12s;text-decoration:none;
-}
-.main-nav a:hover{background:rgba(0,0,0,.15)}
-.main-nav a.nav-active{background:#000;color:#fff}
-.main-nav a.mp-pill{
-  background:#000;color:#fff !important;
-  border-radius:20px;padding:8px 18px;font-weight:800;
-}
-.main-nav a.mp-pill:hover{background:#333}
-/* zwarte accountbalk */
-.hd-acc{
-  background:#111;
-  padding:0 28px;display:flex;overflow-x:auto;
-}
-.hd-acc a{
-  padding:9px 16px;font-size:13px;color:#bbb;font-weight:600;
-  white-space:nowrap;transition:color .12s;text-decoration:none;
-  border-bottom:3px solid transparent;
-}
-.hd-acc a:hover{color:#fff}
-.hd-acc a.active{color:#fff;border-bottom-color:#f5c800}
+.logout-btn:hover{background:var(--bg)}
 
 /* ══ LAYOUT ════════════════════════════════════════════════ */
 .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
-.page-body{padding:28px 0 80px}
+.page-body{padding:20px 0 80px}
 
 .pg-header{
   background:var(--w);border-bottom:1px solid var(--border);
-  padding:16px 0 14px;margin-bottom:20px;
+  padding:12px 0 10px;margin-bottom:0;
 }
 .pg-header h1{font-size:22px;font-weight:900;color:var(--t);margin-bottom:4px}
 .pg-header p{font-size:14px;color:var(--ts)}
@@ -119,7 +129,7 @@ body{padding-top:40px}
 .breadcrumb a{color:var(--ts)}
 .breadcrumb a:hover{color:var(--g);text-decoration:underline}
 
-.sidebar-layout{display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:start}
+.sidebar-layout{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}
 .detail-layout{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
 .dash-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:22px;align-items:start}
 .dash-layout > *:first-child{width:210px;min-width:210px;max-width:210px}
@@ -139,8 +149,8 @@ body{padding-top:40px}
 /* ══ LISTING CARDS ══════════════════════════════════════════ */
 .listing-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
-  gap:16px;
+  grid-template-columns:repeat(auto-fill,minmax(175px,1fr));
+  gap:14px;
 }
 .lcard{
   background:var(--w);border:1px solid var(--border);
@@ -159,7 +169,7 @@ body{padding-top:40px}
   display:flex;justify-content:space-between;align-items:flex-end;
 }
 .lcard-price{color:#fff;font-size:17px;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.4)}
-.lcard-body{padding:10px 12px 12px}
+.lcard-body{padding:8px 10px 10px}
 .lcard-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:2px;line-height:1.3;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lcard-sub{font-size:12px;color:var(--ts);margin-bottom:7px}
@@ -465,38 +475,29 @@ input[type=range]{width:100%;accent-color:var(--g)}
      SITE HEADER (shared)
 ══════════════════════════════════════════════ -->
 <header class="site-header">
-  <div class="hd-top">
-    <div class="hd-top-l">
-      <div class="tt">De grootste online strip community</div>
-      <div class="ts">Beheer je verzameling en verkoop je dubbele items</div>
-    </div>
-    <div class="hd-top-r">
-      <span>Welkom Christophe</span>
-      <button class="logout-btn">Logout</button>
-    </div>
-  </div>
-  <div class="hd-mid">
-    <a href="#" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0">
-      <img src="logo.avif" alt="Stripinfo.be" style="height:52px;width:auto;display:block">
+  <div class="hd-inner">
+    <!-- Logo -->
+    <a class="hd-logo" href="#" onclick="go('overzicht');return false">
+      <img src="logo.avif" alt="Stripinfo.be" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="height:36px">
+      <span style="display:none;align-items:center;font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:16px;color:var(--g)">STRIPINFO<span style="background:var(--g);color:#fff;border-radius:3px;padding:1px 5px;font-size:10px;margin-left:3px">!BE</span></span>
     </a>
-    <nav class="main-nav">
-      <a href="#">Home</a>
-      <a href="#">Strips</a>
-      <a href="#">Auteurs</a>
-      <a href="#">Uitgevers</a>
-      <a href="#">Nieuws</a>
-      <a href="#">Forum</a>
-      <a href="#" class="mp-pill" onclick="go('overzicht');return false">🛒 Marketplace</a>
+    <!-- Zoekbalk -->
+    <div class="hd-search">
+      <input type="text" placeholder="Zoek titel, reeks, auteur, ISBN…">
+      <button>Zoeken</button>
+    </div>
+    <!-- Navigatie -->
+    <nav class="hd-nav">
+      <a href="#" onclick="go('aanbiedingen');return false" id="acc-aanbiedingen">Mijn aanbiedingen</a>
+      <a href="#" onclick="go('aankopen');return false" id="acc-aankopen">Mijn aankopen</a>
+      <a href="#" onclick="go('berichten');return false" id="acc-berichten" class="hd-badge">
+        Berichten<span class="dot"></span>
+      </a>
+      <a href="#" onclick="go('plaatsen');return false" class="hd-sell-btn">+ Verkopen</a>
+      <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
+      <div class="hd-avatar" title="Christophe">C</div>
+      <button class="logout-btn">Logout</button>
     </nav>
-  </div>
-  <div class="hd-acc">
-    <a href="#">Mijn collectie</a>
-    <a href="#">Verlanglijst</a>
-    <a href="#" onclick="go('aanbiedingen');return false" id="acc-aanbiedingen">Mijn aanbiedingen</a>
-    <a href="#" onclick="go('aankopen');return false" id="acc-aankopen">Mijn aankopen</a>
-    <a href="#" onclick="go('verkopen');return false" id="acc-verkopen">Mijn verkopen</a>
-    <a href="#" onclick="go('berichten');return false" id="acc-berichten">Berichten <span style="background:#e8192c;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:3px">2</span></a>
-    <a href="#">Mijn account</a>
   </div>
 </header>
 
@@ -504,23 +505,16 @@ input[type=range]{width:100%;accent-color:var(--g)}
      PAGE 1: OVERZICHT
 ══════════════════════════════════════════════ -->
 <div class="page active" id="p-overzicht">
-  <div class="pg-header">
+  <div class="page-body" style="padding-top:18px">
     <div class="wrap">
-      <div class="breadcrumb"><a href="#">Home</a> <span>›</span> Marketplace</div>
-      <h1>Marketplace</h1>
-      <p>Koop en verkoop strips binnen de Stripinfo community — veilig via Stripe</p>
-    </div>
-  </div>
-  <div class="page-body">
-    <div class="wrap">
-      <!-- Search + CTA -->
-      <div class="card card-body flex gap12 align-center mb20" style="margin-bottom:20px">
-        <div style="flex:1;display:flex;gap:8px">
-          <input type="text" placeholder="Zoek op titel, reeks, auteur of ISBN..." style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--r6);font-size:14px;font-family:inherit">
-          <button class="btn btn-green"><span class="icon ion-ios-search"></span> Zoeken</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div>
+          <div class="breadcrumb" style="margin-bottom:2px"><a href="#">Home</a> › Marketplace</div>
+          <h1 style="font-size:22px;font-weight:900;color:var(--t);margin:0">Marketplace</h1>
         </div>
-        <button class="btn btn-green" onclick="go('plaatsen')"><span class="icon ion-ios-add-circle"></span> Strip verkopen</button>
+        <button class="btn btn-green" onclick="go('plaatsen')" style="padding:9px 18px"><span class="icon ion-ios-add-circle"></span> Strip verkopen</button>
       </div>
+
 
       <div class="sidebar-layout">
         <!-- Filters -->
@@ -556,11 +550,11 @@ input[type=range]{width:100%;accent-color:var(--g)}
 
         <!-- Grid -->
         <div>
-          <div class="flex justify-between align-center" style="margin-bottom:14px">
-            <span class="f13 text-soft"><strong>24</strong> aanbiedingen gevonden</span>
+          <div class="flex justify-between align-center" style="margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)">
+            <span class="f13 text-soft"><strong style="color:var(--t)">24</strong> aanbiedingen gevonden</span>
             <div style="display:flex;gap:8px;align-items:center">
               <span class="f12 text-soft">Sorteren:</span>
-              <select style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;background:#fff">
+              <select style="padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;background:#fff">
                 <option>Nieuwste eerst</option>
                 <option>Prijs: laag → hoog</option>
                 <option>Prijs: hoog → laag</option>
@@ -620,7 +614,6 @@ input[type=range]{width:100%;accent-color:var(--g)}
         </div>
       </div>
     </div>
-  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
@@ -882,7 +875,7 @@ input[type=range]{width:100%;accent-color:var(--g)}
      PAGE 4: MIJN AANBIEDINGEN
 ══════════════════════════════════════════════ */
 <div class="page" id="p-aanbiedingen">
-  <div style="background:#fff;border-bottom:2px solid var(--border);position:sticky;top:176px;z-index:50">
+  <div style="background:#fff;border-bottom:2px solid var(--border);position:sticky;top:100px;z-index:50">
     <div style="max-width:1160px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:0;overflow-x:auto">
         <a href="#" onclick="go('aanbiedingen');return false" style="padding:12px 18px;font-size:13px;color:var(--g);border-bottom:3px solid var(--g);font-weight:700;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aanbiedingen</a><a href="#" onclick="go('verkopen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn verkopen</a><a href="#" onclick="go('aankopen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aankopen</a><a href="#" onclick="go('berichten');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Berichten <span style='background:#e8192c;color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px'>2</span></a><a href="#" onclick="go('plaatsen');return false" style="margin-left:auto;background:var(--g);color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">+ Nieuwe aanbieding</a>
     </div>
@@ -1000,7 +993,7 @@ input[type=range]{width:100%;accent-color:var(--g)}
      PAGE 5: MIJN VERKOPEN (trackingcode invoer)
 ══════════════════════════════════════════════ -->
 <div class="page" id="p-verkopen">
-  <div style="background:#fff;border-bottom:2px solid var(--border);position:sticky;top:176px;z-index:50">
+  <div style="background:#fff;border-bottom:2px solid var(--border);position:sticky;top:100px;z-index:50">
     <div style="max-width:1160px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:0;overflow-x:auto">
         <a href="#" onclick="go('aanbiedingen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aanbiedingen</a><a href="#" onclick="go('verkopen');return false" style="padding:12px 18px;font-size:13px;color:var(--g);border-bottom:3px solid var(--g);font-weight:700;text-decoration:none;white-space:nowrap;transition:.12s">Mijn verkopen</a><a href="#" onclick="go('aankopen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aankopen</a><a href="#" onclick="go('berichten');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Berichten <span style='background:#e8192c;color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px'>2</span></a><a href="#" onclick="go('plaatsen');return false" style="margin-left:auto;background:var(--g);color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">+ Nieuwe aanbieding</a>
     </div>
@@ -1067,7 +1060,7 @@ input[type=range]{width:100%;accent-color:var(--g)}
      PAGE 6: MIJN AANKOPEN
 ══════════════════════════════════════════════ -->
 <div class="page" id="p-aankopen">
-  <div style="background:#fff;border-bottom:2px solid var(--border);position:sticky;top:176px;z-index:50">
+  <div style="background:#fff;border-bottom:2px solid var(--border);position:sticky;top:100px;z-index:50">
     <div style="max-width:1160px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:0;overflow-x:auto">
         <a href="#" onclick="go('aanbiedingen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aanbiedingen</a><a href="#" onclick="go('verkopen');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Mijn verkopen</a><a href="#" onclick="go('aankopen');return false" style="padding:12px 18px;font-size:13px;color:var(--g);border-bottom:3px solid var(--g);font-weight:700;text-decoration:none;white-space:nowrap;transition:.12s">Mijn aankopen</a><a href="#" onclick="go('berichten');return false" style="padding:12px 18px;font-size:13px;color:var(--tm);border-bottom:3px solid transparent;text-decoration:none;white-space:nowrap;transition:.12s">Berichten <span style='background:#e8192c;color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px'>2</span></a><a href="#" onclick="go('plaatsen');return false" style="margin-left:auto;background:var(--g);color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">+ Nieuwe aanbieding</a>
       </div>
