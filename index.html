@@ -122,7 +122,7 @@ body{padding-top:40px}
 
 .sidebar-layout{display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:start}
 .detail-layout{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
-.dash-layout{display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start}
+.dash-layout{display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start;width:100%}
 
 /* ══ CARD ══════════════════════════════════════════════════ */
 .card{
@@ -315,7 +315,8 @@ input[type=range]{width:100%;accent-color:var(--g)}
 .dash-nav a{
   display:flex;align-items:center;gap:9px;padding:12px 16px;
   font-size:13px;color:var(--tm);border-bottom:1px solid var(--border);
-  cursor:pointer;transition:background .1s;
+  cursor:pointer;transition:background .1s;text-decoration:none;
+  width:100%;box-sizing:border-box;
 }
 .dash-nav a:last-child{border:none}
 .dash-nav a:hover{background:var(--bg)}
@@ -458,22 +459,15 @@ input[type=range]{width:100%;accent-color:var(--g)}
     </div>
   </div>
   <div class="hd-mid">
-    <a class="logo-wrap" href="#" style="display:flex;align-items:center;text-decoration:none">
-      <svg viewBox="0 0 220 60" height="54" xmlns="http://www.w3.org/2000/svg" style="display:block">
-        <!-- speech bubble lines top left -->
-        <line x1="8" y1="8" x2="18" y2="8" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="5" y1="13" x2="22" y2="13" stroke="#000" stroke-width="2.5" stroke-linecap="round"/>
-        <!-- STRIPINFO text -->
-        <text x="26" y="26" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="19" fill="#000" letter-spacing="-0.5">STRIPINFO</text>
-        <!-- !BE speech bubble -->
-        <rect x="152" y="10" width="38" height="22" rx="5" fill="#000"/>
-        <polygon points="158,32 154,40 164,32" fill="#000"/>
-        <text x="158" y="26" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="13" fill="#fff">!BE</text>
-        <!-- subtitle -->
-        <text x="26" y="42" font-family="Arial, sans-serif" font-weight="400" font-size="9.5" fill="#000" letter-spacing="1.5">ALTIJD EEN </text>
-        <text x="88" y="42" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="9.5" fill="#000" letter-spacing="1">STRIPJE</text>
-        <text x="135" y="42" font-family="Arial, sans-serif" font-weight="400" font-size="9.5" fill="#000" letter-spacing="1.5"> VOOR</text>
-      </svg>
+    <a href="#" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0">
+      <img src="https://new.stripinfo.be/assets/images/logo.svg" 
+           alt="Stripinfo.be" 
+           style="height:50px;width:auto;display:block"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div style="display:none;align-items:flex-end;gap:0;line-height:1">
+        <div style="font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:26px;color:#000;letter-spacing:-1px">STRIPINFO</div>
+        <div style="background:#000;color:#fff;font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:13px;padding:3px 7px;border-radius:5px;margin-left:4px;margin-bottom:3px">!BE</div>
+      </div>
     </a>
     <nav class="main-nav">
       <a href="#">Home</a>
