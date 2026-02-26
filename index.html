@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stripinfo Marketplace — Prototype voor Yann</title>
+<link rel="icon" href="https://new.stripinfo.be/assets/images/favicons/favicon.png">
+<link href="https://new.stripinfo.be/assets/css/style.css?v=1772010693" rel="stylesheet">
+<link href="https://new.stripinfo.be/assets/css/ionicons.min.css?v=1772010693" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#eeeeee;color:#1e1e1e}
+a{text-decoration:none;color:inherit}
+img{display:block}
+
+/* TOKENS */
+:root{
+  --g:#1f7a45; --gd:#145530; --gl:#e8f5ee; --gm:#c3e6d0;
+  --r:#c0392b; --rl:#fdf0ef;
+  --b:#1a4a8a; --bl:#eef3fc;
+  --o:#c8701e; --ol:#fdf3e8;
+  --t:#1e1e1e; --tm:#555; --ts:#999;
+  --border:#ddd; --bg:#eeeeee; --w:#fff;
+  --sh:0 1px 4px rgba(0,0,0,.08);
+  --shm:0 3px 12px rgba(0,0,0,.11);
+  --shl:0 8px 28px rgba(0,0,0,.14);
+  --r6:6px; --r10:10px;
+}
+
+/* ROUTING */
+.page{display:none}
+.page.active{display:block;animation:fi .16s ease}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ══ PROTOTYPE NAV BAR ══════════════════════════════════════ */
+#pb{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  background:#0d0d0d;height:40px;display:flex;align-items:center;
+  padding:0 16px;gap:8px;font-size:11.5px;font-family:'DM Sans',sans-serif;
+  border-bottom:2px solid var(--g);
+}
+#pb strong{color:var(--g);white-space:nowrap;font-size:12px;letter-spacing:.2px}
+#pb .div{width:1px;height:20px;background:#333;margin:0 4px}
+#pb .pnav{display:flex;gap:3px;flex-wrap:wrap}
+#pb .pnav button{
+  background:#1e1e1e;color:#aaa;border:1px solid #333;border-radius:4px;
+  padding:3px 10px;font-size:11px;cursor:pointer;font-family:inherit;
+  transition:all .12s;white-space:nowrap;
+}
+#pb .pnav button:hover{background:#333;color:#fff;border-color:#555}
+#pb .pnav button.on{background:var(--g);color:#fff;border-color:var(--g)}
+body{padding-top:40px}
+
+/* ══ SITE HEADER (exact stripinfo.be structuur) ═══════════ */
+.site-header{
+  position:sticky;top:40px;z-index:100;
+  background:var(--w);box-shadow:0 2px 8px rgba(0,0,0,.09);
+}
+.hd-top{
+  background:#f6f6f6;border-bottom:1px solid #e8e8e8;
+  padding:7px 28px;display:flex;justify-content:space-between;align-items:center;
+}
+.hd-top-l .tt{font-size:13px;font-weight:700;color:var(--t)}
+.hd-top-l .ts{font-size:11px;color:var(--ts)}
+.hd-top-r{display:flex;align-items:center;gap:18px;font-size:13px}
+.hd-top-r a{color:var(--tm);transition:color .12s}
+.hd-top-r a:hover{color:var(--g)}
+.hd-mid{
+  padding:0 28px;display:flex;align-items:center;height:58px;gap:16px;
+}
+.logo-wrap{
+  display:block;width:150px;height:38px;flex-shrink:0;
+  background:url('https://new.stripinfo.be/assets/images/logo.svg') left center/contain no-repeat;
+  overflow:hidden;color:transparent;font-size:0;
+}
+.main-nav{display:flex;align-items:center;gap:2px;margin-left:auto}
+.main-nav a{
+  padding:7px 13px;border-radius:4px;font-size:13px;font-weight:600;
+  color:var(--tm);transition:all .12s;
+}
+.main-nav a:hover{background:#f0f0f0;color:var(--t)}
+.main-nav a.active{color:var(--t)}
+.main-nav a.mp-pill{
+  background:var(--g);color:#fff !important;
+  border-radius:20px;padding:7px 16px;font-weight:700;
+}
+.main-nav a.mp-pill:hover{background:var(--gd)}
+.hd-acc{
+  background:#f6f6f6;border-top:1px solid #e8e8e8;
+  padding:5px 28px;display:flex;gap:0;overflow-x:auto;
+}
+.hd-acc a{
+  padding:5px 14px;font-size:12px;color:var(--tm);
+  border-right:1px solid #e8e8e8;white-space:nowrap;
+  transition:background .12s,color .12s;
+}
+.hd-acc a:first-child{padding-left:0}
+.hd-acc a:hover{color:var(--g);background:#edf8f2}
+.hd-acc a.active{color:var(--g);font-weight:700}
+
+/* ══ LAYOUT ════════════════════════════════════════════════ */
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+.page-body{padding:28px 0 60px}
+
+.pg-header{
+  background:var(--w);border-bottom:1px solid var(--border);
+  padding:24px 0 20px;margin-bottom:24px;
+}
+.pg-header h1{font-size:21px;font-weight:800;color:var(--t);margin-bottom:3px}
+.pg-header p{font-size:14px;color:var(--ts)}
+.breadcrumb{font-size:12px;color:var(--ts);margin-bottom:8px}
+.breadcrumb a{color:var(--ts)}
+.breadcrumb a:hover{color:var(--g);text-decoration:underline}
+
+.sidebar-layout{display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:start}
+.detail-layout{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
+.dash-layout{display:grid;grid-template-columns:210px 1fr;gap:22px;align-items:start}
+
+/* ══ CARD ══════════════════════════════════════════════════ */
+.card{
+  background:var(--w);border:1px solid var(--border);
+  border-radius:var(--r6);box-shadow:var(--sh);
+}
+.card-body{padding:20px 22px}
+.card-head{
+  padding:14px 22px;border-bottom:1px solid var(--border);
+  font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--ts);
+}
+
+/* ══ LISTING CARDS ══════════════════════════════════════════ */
+.listing-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:16px;
+}
+.lcard{
+  background:var(--w);border:1px solid var(--border);
+  border-radius:var(--r6);box-shadow:var(--sh);
+  overflow:hidden;cursor:pointer;
+  transition:box-shadow .15s,transform .15s;
+}
+.lcard:hover{box-shadow:var(--shl);transform:translateY(-2px)}
+.lcard-img{position:relative;background:#f8f8f8;aspect-ratio:2/3;overflow:hidden}
+.lcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .2s}
+.lcard:hover .lcard-img img{transform:scale(1.03)}
+.lcard-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,.65));
+  padding:28px 10px 8px;
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.lcard-price{color:#fff;font-size:17px;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.lcard-body{padding:10px 12px 12px}
+.lcard-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:2px;line-height:1.3;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lcard-sub{font-size:12px;color:var(--ts);margin-bottom:7px}
+.lcard-meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--ts)}
+
+/* ══ STAAT BADGES ═══════════════════════════════════════════ */
+.st{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.st-n {background:#e8f5ee;color:#1f7a45}
+.st-zg{background:#eef3fc;color:#1a4a8a}
+.st-g {background:#fff8e6;color:#a07020}
+.st-m {background:#fdf3e8;color:#c8701e}
+.st-s {background:#fdf0ef;color:#c0392b}
+
+/* ══ SIDEBAR FILTERS ═══════════════════════════════════════ */
+.filter-box{background:var(--w);border:1px solid var(--border);border-radius:var(--r6);padding:18px;box-shadow:var(--sh)}
+.filter-box h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ts);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.filter-group{margin-bottom:16px}
+.filter-group label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);cursor:pointer;margin-bottom:5px}
+.filter-group input[type=checkbox]{accent-color:var(--g);width:14px;height:14px}
+.filter-group select,.filter-group input[type=text]{
+  width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:4px;
+  font-size:13px;color:var(--t);font-family:inherit;background:var(--w);
+  transition:border-color .12s;
+}
+.filter-group select:focus,.filter-group input:focus{outline:none;border-color:var(--g)}
+.price-row{display:flex;justify-content:space-between;font-size:11px;color:var(--ts);margin-top:4px}
+input[type=range]{width:100%;accent-color:var(--g)}
+
+/* ══ BUTTONS ═══════════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 18px;border-radius:var(--r6);font-size:13px;font-weight:700;
+  font-family:inherit;border:none;cursor:pointer;transition:all .13s;
+  white-space:nowrap;text-decoration:none;
+}
+.btn-green{background:var(--g);color:#fff}.btn-green:hover{background:var(--gd)}
+.btn-outline{background:var(--w);color:var(--g);border:2px solid var(--g)}.btn-outline:hover{background:var(--gl)}
+.btn-ghost{background:var(--bg);color:var(--tm);border:1px solid var(--border)}.btn-ghost:hover{background:#e4e4e4}
+.btn-red{background:var(--r);color:#fff}.btn-red:hover{background:#a93226}
+.btn-lg{padding:13px 24px;font-size:15px;border-radius:var(--r6)}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-block{display:flex;width:100%}
+
+/* ══ FORMS ══════════════════════════════════════════════════ */
+.form-section{background:var(--w);border:1px solid var(--border);border-radius:var(--r6);padding:22px;margin-bottom:18px;box-shadow:var(--sh)}
+.form-section h3{font-size:14px;font-weight:700;color:var(--t);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--tm);margin-bottom:5px}
+.form-group .req{color:var(--r)}
+.form-group input[type=text],.form-group input[type=number],.form-group input[type=email],
+.form-group textarea,.form-group select{
+  width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:4px;
+  font-size:14px;color:var(--t);font-family:inherit;background:var(--w);
+  transition:border-color .12s;
+}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 3px rgba(31,122,69,.1)}
+.form-group .hint{font-size:12px;color:var(--ts);margin-top:4px}
+.col2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.col3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+/* ══ GRADING ════════════════════════════════════════════════ */
+.grading{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.g-opt{
+  border:2px solid var(--border);border-radius:var(--r6);
+  padding:12px 6px;text-align:center;cursor:pointer;transition:all .13s;
+}
+.g-opt:hover{border-color:var(--g);background:var(--gl)}
+.g-opt.sel{border-color:var(--g);background:var(--gl)}
+.g-opt .ico{font-size:22px;margin-bottom:5px}
+.g-opt .lbl{font-size:12px;font-weight:700;color:var(--t)}
+.g-opt .sub{font-size:10px;color:var(--ts);margin-top:2px}
+
+/* ══ ISBN BOX ═══════════════════════════════════════════════ */
+.isbn-box{
+  background:var(--w);border:2px solid var(--g);
+  border-radius:var(--r6);padding:20px;margin-bottom:20px;
+}
+.isbn-box h4{color:var(--g);font-size:15px;margin-bottom:8px}
+.isbn-row{display:flex;gap:8px}
+.isbn-row input{flex:1;padding:10px 12px;border:1px solid var(--border);border-radius:4px;font-size:14px;font-family:inherit}
+.isbn-row input:focus{outline:none;border-color:var(--g)}
+.isbn-result{
+  background:var(--gl);border-radius:var(--r6);
+  padding:14px;margin-top:14px;display:none;
+  gap:14px;align-items:flex-start;
+}
+.isbn-result.vis{display:flex}
+.isbn-result img{width:64px;border-radius:4px;border:1px solid var(--border)}
+.isbn-result .meta strong{display:block;font-size:15px;margin-bottom:3px}
+.isbn-result .meta span{font-size:12px;color:var(--ts);display:block;margin-bottom:8px}
+
+/* ══ COMMISSION CALC ════════════════════════════════════════ */
+.calc{
+  background:var(--gl);border:1px solid var(--gm);
+  border-radius:var(--r6);padding:14px 16px;margin-top:10px;
+}
+.calc .row{display:flex;justify-content:space-between;font-size:13px;color:var(--tm);margin-bottom:4px}
+.calc .total{
+  font-weight:800;font-size:15px;color:var(--g);
+  border-top:1px solid var(--gm);padding-top:8px;margin-top:6px;
+}
+.calc .label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g);margin-bottom:8px}
+
+/* ══ STEPS ══════════════════════════════════════════════════ */
+.steps{display:flex;align-items:center;margin-bottom:28px}
+.step{display:flex;align-items:center;gap:8px}
+.step-num{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;flex-shrink:0;
+}
+.step.done .step-num{background:var(--g);color:#fff}
+.step.now .step-num{background:var(--g);color:#fff;box-shadow:0 0 0 4px var(--gl)}
+.step.todo .step-num{background:#e0e0e0;color:#aaa}
+.step-lbl{font-size:13px;font-weight:600}
+.step.done .step-lbl{color:var(--tm)}
+.step.now .step-lbl{color:var(--g)}
+.step.todo .step-lbl{color:#ccc}
+.step-line{flex:1;height:2px;background:#e0e0e0;margin:0 8px}
+.step-line.done{background:var(--g)}
+
+/* ══ BUY BOX ════════════════════════════════════════════════ */
+.buy-box{
+  background:var(--w);border:1px solid var(--border);
+  border-radius:var(--r6);padding:22px;box-shadow:var(--shm);
+  position:sticky;top:110px;
+}
+.buy-price{font-size:30px;font-weight:900;color:var(--g);line-height:1}
+.buy-total{font-size:13px;color:var(--ts);margin:4px 0 18px}
+.buy-row{display:flex;justify-content:space-between;font-size:13px;color:var(--tm);padding:6px 0;border-bottom:1px solid var(--border)}
+.buy-row:last-of-type{border:none;font-weight:800;font-size:15px;color:var(--t)}
+.seller-block{margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+.seller-ava{
+  width:38px;height:38px;border-radius:50%;background:#e0e0e0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;color:#777;font-size:15px;flex-shrink:0;
+}
+.stars{display:flex;gap:2px;color:#f4a623;font-size:13px}
+
+/* ══ TABLE ══════════════════════════════════════════════════ */
+.mp-table{width:100%;border-collapse:collapse;background:var(--w);border-radius:var(--r6);overflow:hidden;box-shadow:var(--sh);border:1px solid var(--border)}
+.mp-table th{background:#f6f6f6;padding:11px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--ts);border-bottom:1px solid var(--border)}
+.mp-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+.mp-table tr:last-child td{border:none}
+.mp-table tr:hover td{background:#fafafa}
+.mp-table .timg{width:48px;height:62px;object-fit:cover;border-radius:4px;border:1px solid var(--border)}
+.tlink{color:var(--g);font-weight:700;cursor:pointer}.tlink:hover{text-decoration:underline}
+.tlink-red{color:var(--r);cursor:pointer}.tlink-red:hover{text-decoration:underline}
+.tlink-gray{color:var(--ts);cursor:pointer}.tlink-gray:hover{color:var(--tm)}
+
+/* ══ DASH NAV ═══════════════════════════════════════════════ */
+.dash-nav{background:var(--w);border:1px solid var(--border);border-radius:var(--r6);overflow:hidden;box-shadow:var(--sh)}
+.dash-nav a{
+  display:flex;align-items:center;gap:9px;padding:12px 16px;
+  font-size:13px;color:var(--tm);border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .1s;
+}
+.dash-nav a:last-child{border:none}
+.dash-nav a:hover{background:var(--bg)}
+.dash-nav a.on{background:var(--gl);color:var(--g);font-weight:700;border-left:3px solid var(--g)}
+.dash-nav .badge-n{background:var(--r);color:#fff;border-radius:20px;padding:1px 7px;font-size:10px;margin-left:auto}
+
+/* ══ CHAT / BERICHTEN ═══════════════════════════════════════ */
+.chat-wrap{background:var(--w);border:1px solid var(--border);border-radius:var(--r6);overflow:hidden;display:flex;flex-direction:column;height:460px;box-shadow:var(--sh)}
+.chat-head{padding:12px 16px;background:#f6f6f6;border-bottom:1px solid var(--border);font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:72%}
+.msg.me{align-self:flex-end}
+.msg.other{align-self:flex-start}
+.msg .who{font-size:11px;color:var(--ts);margin-bottom:3px}
+.msg .bubble{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5}
+.msg.me .bubble{background:var(--g);color:#fff;border-bottom-right-radius:3px}
+.msg.other .bubble{background:#f0f0f0;color:var(--t);border-bottom-left-radius:3px}
+.msg .ts{font-size:11px;color:var(--ts);margin-top:3px;text-align:right}
+.msg.other .ts{text-align:left}
+.chat-input{padding:12px;border-top:1px solid var(--border);display:flex;gap:8px}
+.chat-input input{flex:1;padding:9px 14px;border:1px solid var(--border);border-radius:20px;font-size:13px;font-family:inherit}
+.chat-input input:focus{outline:none;border-color:var(--g)}
+.chat-input button{background:var(--g);color:#fff;border:none;border-radius:20px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer}
+
+/* ══ ALERT ══════════════════════════════════════════════════ */
+.alert{display:flex;gap:10px;align-items:flex-start;padding:12px 16px;border-radius:var(--r6);font-size:13px;line-height:1.5;margin-bottom:14px}
+.alert-green{background:var(--gl);border-left:4px solid var(--g);color:#155530}
+.alert-orange{background:var(--ol);border-left:4px solid var(--o);color:#7a3f0f}
+.alert-red{background:var(--rl);border-left:4px solid var(--r);color:#7a1a1a}
+.alert-blue{background:var(--bl);border-left:4px solid var(--b);color:#0f2d6a}
+.alert .icon{font-size:18px;flex-shrink:0;margin-top:1px}
+
+/* ══ PHOTO UPLOAD ═══════════════════════════════════════════ */
+.photo-drop{border:2px dashed var(--border);border-radius:var(--r6);padding:28px;text-align:center;color:var(--ts);cursor:pointer;transition:all .13s}
+.photo-drop:hover{border-color:var(--g);color:var(--g);background:var(--gl)}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:12px}
+.photo-thumb{aspect-ratio:1;border-radius:4px;overflow:hidden;border:1px solid var(--border);background:#f8f8f8;display:flex;align-items:center;justify-content:center;font-size:22px;color:#ccc}
+
+/* ══ TIMER ══════════════════════════════════════════════════ */
+.timer{display:inline-flex;align-items:center;gap:5px;font-size:12px}
+.timer .days{background:#333;color:#fff;border-radius:3px;padding:2px 7px;font-weight:800;font-size:13px}
+.timer.ok .days{background:var(--g)}
+.timer.warn .days{background:var(--o)}
+.timer.urgent .days{background:var(--r)}
+
+/* ══ STATS ══════════════════════════════════════════════════ */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat{background:var(--w);border:1px solid var(--border);border-radius:var(--r6);padding:16px;text-align:center;box-shadow:var(--sh)}
+.stat .val{font-size:26px;font-weight:900;line-height:1}
+.stat .lbl{font-size:12px;color:var(--ts);margin-top:4px}
+
+/* ══ SHIPPING ROWS ══════════════════════════════════════════ */
+.ship-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--border);font-size:13px}
+.ship-row .icon{font-size:20px;color:var(--g);flex-shrink:0}
+.ship-row .ship-price{margin-left:auto;font-weight:800;color:var(--g)}
+
+/* ══ SPECS TABLE ════════════════════════════════════════════ */
+.specs{border-collapse:collapse;width:100%;font-size:14px}
+.specs tr{border-bottom:1px solid var(--border)}
+.specs tr:last-child{border:none}
+.specs td{padding:8px 4px}
+.specs td:first-child{color:var(--ts);width:38%}
+.specs td:last-child{font-weight:600;color:var(--t)}
+
+/* ══ TABS ═══════════════════════════════════════════════════ */
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:20px}
+.tab-btn{
+  padding:10px 18px;border:none;background:none;font-size:13px;
+  font-weight:600;color:var(--ts);cursor:pointer;font-family:inherit;
+  border-bottom:2px solid transparent;margin-bottom:-2px;transition:.12s;
+}
+.tab-btn.on{color:var(--g);border-bottom-color:var(--g)}
+.tab-btn:hover:not(.on){color:var(--t)}
+.tab-pane{display:none}.tab-pane.on{display:block}
+
+/* ══ CONVERSATION LIST ══════════════════════════════════════ */
+.conv-list{background:var(--w);border:1px solid var(--border);border-radius:var(--r6);overflow:hidden;box-shadow:var(--sh)}
+.conv-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.conv-item:last-child{border:none}
+.conv-item:hover{background:#f8f8f8}
+.conv-item.on{background:var(--gl);border-left:3px solid var(--g)}
+.conv-item .cn{font-size:13px;font-weight:700;color:var(--t)}
+.conv-item .cm{font-size:12px;color:var(--ts);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-item .ct{font-size:11px;color:var(--ts)}
+
+/* ══ KLACHT DETAIL ══════════════════════════════════════════ */
+.klacht-header{background:linear-gradient(135deg,#7a1a0f,var(--r));color:#fff;padding:28px 0 22px;margin-bottom:24px}
+.klacht-header h1{color:#fff;font-size:21px;font-weight:800}
+.klacht-header p{color:rgba(255,255,255,.75);font-size:14px}
+.klacht-header .breadcrumb a{color:rgba(255,255,255,.6)}
+
+/* ══ MISC ═══════════════════════════════════════════════════ */
+.divider{height:1px;background:var(--border);margin:16px 0}
+.text-green{color:var(--g)}
+.text-red{color:var(--r)}
+.text-soft{color:var(--ts)}
+.text-sm{font-size:12px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}
+.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}.mb20{margin-bottom:20px}
+.flex{display:flex}.gap8{gap:8px}.gap12{gap:12px}.gap16{gap:16px}
+.align-center{align-items:center}.justify-between{justify-content:space-between}
+.fw7{font-weight:700}.fw8{font-weight:800}
+.f13{font-size:13px}.f12{font-size:12px}.f11{font-size:11px}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     PROTOTYPE NAV BAR
+══════════════════════════════════════════════ -->
+<div id="pb">
+  <strong>🛒 Marketplace Prototype</strong>
+  <div class="div"></div>
+  <div class="pnav">
+    <button class="on" onclick="go('overzicht')">1. Overzicht</button>
+    <button onclick="go('detail')">2. Detail</button>
+    <button onclick="go('plaatsen')">3. Verkopen</button>
+    <button onclick="go('aanbiedingen')">4. Mijn aanbiedingen</button>
+    <button onclick="go('verkopen')">5. Mijn verkopen</button>
+    <button onclick="go('aankopen')">6. Mijn aankopen</button>
+    <button onclick="go('checkout')">7. Checkout</button>
+    <button onclick="go('klacht')">8. Klacht</button>
+    <button onclick="go('berichten')">9. Berichten</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SITE HEADER (shared)
+══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="hd-top">
+    <div class="hd-top-l">
+      <div class="tt">De grootste online strip community</div>
+      <div class="ts">Beheer je verzameling en verkoop je dubbele items</div>
+    </div>
+    <div class="hd-top-r">
+      <strong>Welkom Christophe</strong>
+      <a href="#">Logout</a>
+    </div>
+  </div>
+  <div class="hd-mid">
+    <a class="logo-wrap" href="#">Stripinfo</a>
+    <nav class="main-nav">
+      <a href="#">Home</a>
+      <a href="#">Strips</a>
+      <a href="#">Auteurs</a>
+      <a href="#">Uitgevers</a>
+      <a href="#">Nieuws</a>
+      <a href="#">Forum</a>
+      <a href="#" class="mp-pill" onclick="go('overzicht');return false">🛒 Marketplace</a>
+    </nav>
+  </div>
+  <div class="hd-acc">
+    <a href="#">Mijn collectie</a>
+    <a href="#">Verlanglijst</a>
+    <a href="#" onclick="go('aanbiedingen');return false" id="acc-aanbiedingen">Mijn aanbiedingen</a>
+    <a href="#" onclick="go('aankopen');return false" id="acc-aankopen">Mijn aankopen</a>
+    <a href="#" onclick="go('verkopen');return false" id="acc-verkopen">Mijn verkopen</a>
+    <a href="#" onclick="go('berichten');return false" id="acc-berichten">Berichten <span style="background:var(--r);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:3px">2</span></a>
+    <a href="#">Mijn account</a>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 1: OVERZICHT
+══════════════════════════════════════════════ -->
+<div class="page active" id="p-overzicht">
+  <div class="pg-header">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="#">Home</a> <span>›</span> Marketplace</div>
+      <h1>Marketplace</h1>
+      <p>Koop en verkoop strips binnen de Stripinfo community — veilig via Stripe</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wrap">
+      <!-- Search + CTA -->
+      <div class="card card-body flex gap12 align-center mb20" style="margin-bottom:20px">
+        <div style="flex:1;display:flex;gap:8px">
+          <input type="text" placeholder="Zoek op titel, reeks, auteur of ISBN..." style="flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--r6);font-size:14px;font-family:inherit">
+          <button class="btn btn-green"><span class="icon ion-ios-search"></span> Zoeken</button>
+        </div>
+        <button class="btn btn-green" onclick="go('plaatsen')"><span class="icon ion-ios-add-circle"></span> Strip verkopen</button>
+      </div>
+
+      <div class="sidebar-layout">
+        <!-- Filters -->
+        <aside>
+          <div class="filter-box">
+            <h3>Filteren</h3>
+            <div class="filter-group">
+              <label style="font-size:12px;font-weight:700;color:var(--t);margin-bottom:8px;display:block">Prijs</label>
+              <input type="range" min="2" max="150" value="150" oninput="document.getElementById('pmax').textContent='€'+this.value">
+              <div class="price-row"><span>€ 2</span><span id="pmax">€ 150</span></div>
+            </div>
+            <div class="filter-group">
+              <label style="font-size:12px;font-weight:700;color:var(--t);margin-bottom:6px;display:block">Staat</label>
+              <label><input type="checkbox" checked> Nieuw</label>
+              <label><input type="checkbox" checked> Zeer goed</label>
+              <label><input type="checkbox" checked> Goed</label>
+              <label><input type="checkbox"> Matig</label>
+              <label><input type="checkbox"> Slecht</label>
+            </div>
+            <div class="filter-group">
+              <label style="font-size:12px;font-weight:700;color:var(--t);margin-bottom:6px;display:block">Verzending</label>
+              <label><input type="checkbox" checked> Verzending mogelijk</label>
+              <label><input type="checkbox"> Hand aan hand</label>
+            </div>
+            <div class="filter-group">
+              <label style="font-size:12px;font-weight:700;color:var(--t);margin-bottom:6px;display:block">Land</label>
+              <label><input type="checkbox" checked> België</label>
+              <label><input type="checkbox" checked> Nederland</label>
+            </div>
+            <div class="filter-group">
+              <label style="font-size:12px;font-weight:700;color:var(--t);margin-bottom:6px;display:block">Sorteren</label>
+              <select><option>Nieuwste eerst</option><option>Prijs: laag → hoog</option><option>Prijs: hoog → laag</option></select>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Grid -->
+        <div>
+          <div class="flex justify-between align-center mb12" style="margin-bottom:14px">
+            <span class="f13 text-soft">24 aanbiedingen gevonden</span>
+          </div>
+          <div class="listing-grid">
+            <!-- kaart 1 -->
+            <div class="lcard" onclick="go('detail')">
+              <div class="lcard-img"><img src="https://new.stripinfo.be/images/images/700000/700209.jpg" alt=""><div class="lcard-overlay"><span class="lcard-price">€ 8,50</span><span class="st st-zg">Zeer goed</span></div></div>
+              <div class="lcard-body"><div class="lcard-title">Alya Tome 5</div><div class="lcard-sub">Alya Sometimes Hides…</div><div class="lcard-meta"><span><span class="icon ion-ios-cube"></span> + € 3,50</span><span>🇧🇪</span></div></div>
+            </div>
+            <!-- kaart 2 -->
+            <div class="lcard" onclick="go('detail')">
+              <div class="lcard-img"><img src="https://new.stripinfo.be/images/images/700000/700208.jpg" alt=""><div class="lcard-overlay"><span class="lcard-price">€ 6,00</span><span class="st st-g">Goed</span></div></div>
+              <div class="lcard-body"><div class="lcard-title">Alya Tome 9</div><div class="lcard-sub">Taifu Comics · 2025</div><div class="lcard-meta"><span><span class="icon ion-ios-cube"></span> + € 2,89</span><span>🇧🇪</span></div></div>
+            </div>
+            <!-- kaart 3 -->
+            <div class="lcard" onclick="go('detail')">
+              <div class="lcard-img"><img src="https://new.stripinfo.be/images/images/700000/700202.jpg" alt=""><div class="lcard-overlay"><span class="lcard-price">€ 12,00</span><span class="st st-n">Nieuw</span></div></div>
+              <div class="lcard-body"><div class="lcard-title">Alya Tome 17</div><div class="lcard-sub">Taifu Comics · 2024</div><div class="lcard-meta"><span><span class="icon ion-ios-cube"></span> + € 3,50</span><span>🇧🇪</span></div></div>
+            </div>
+            <!-- kaart 4 -->
+            <div class="lcard" onclick="go('detail')">
+              <div class="lcard-img"><img src="https://new.stripinfo.be/images/images/700000/700201.jpg" alt=""><div class="lcard-overlay"><span class="lcard-price">€ 4,00</span><span class="st st-m">Matig</span></div></div>
+              <div class="lcard-body"><div class="lcard-title">Blake & Mortimer T9</div><div class="lcard-sub">Blake & Mortimer</div><div class="lcard-meta"><span><span class="icon ion-ios-people"></span> Hand-aan-hand</span><span>🇧🇪</span></div></div>
+            </div>
+            <!-- kaart 5 -->
+            <div class="lcard" onclick="go('detail')">
+              <div class="lcard-img"><img src="https://new.stripinfo.be/images/images/700000/700200.jpg" alt=""><div class="lcard-overlay"><span class="lcard-price">€ 9,00</span><span class="st st-zg">Zeer goed</span></div></div>
+              <div class="lcard-body"><div class="lcard-title">Comanche Tome 10</div><div class="lcard-sub">Comanche</div><div class="lcard-meta"><span><span class="icon ion-ios-cube"></span> + € 2,89</span><span>🇳🇱</span></div></div>
+            </div>
+            <!-- kaart 6 -->
+            <div class="lcard" onclick="go('detail')">
+              <div class="lcard-img"><img src="https://new.stripinfo.be/images/images/700000/700199.jpg" alt=""><div class="lcard-overlay"><span class="lcard-price">€ 15,00</span><span class="st st-n">Nieuw</span></div></div>
+              <div class="lcard-body"><div class="lcard-title">Blake & Mortimer T10</div><div class="lcard-sub">Blake & Mortimer</div><div class="lcard-meta"><span><span class="icon ion-ios-cube"></span> + € 3,50</span><span>🇧🇪</span></div></div>
+            </div>
+            <!-- kaart 7 -->
+            <div class="lcard" onclick="go('detail')">
+              <div class="lcard-img"><img src="https://new.stripinfo.be/images/images/688000/690124.jpg" alt=""><div class="lcard-overlay"><span class="lcard-price">€ 7,50</span><span class="st st-g">Goed</span></div></div>
+              <div class="lcard-body"><div class="lcard-title">Malanotte</div><div class="lcard-sub">Taifu Comics</div><div class="lcard-meta"><span><span class="icon ion-ios-cube"></span> + € 2,89</span><span>🇧🇪</span></div></div>
+            </div>
+            <!-- kaart 8 -->
+            <div class="lcard" onclick="go('detail')">
+              <div class="lcard-img"><img src="https://new.stripinfo.be/images/images/696000/698554.jpg" alt=""><div class="lcard-overlay"><span class="lcard-price">€ 11,00</span><span class="st st-zg">Zeer goed</span></div></div>
+              <div class="lcard-body"><div class="lcard-title">Harvest Moons</div><div class="lcard-sub">Onweerslucht</div><div class="lcard-meta"><span><span class="icon ion-ios-cube"></span> + € 3,50</span><span>🇧🇪</span></div></div>
+            </div>
+          </div>
+          <!-- paginering -->
+          <div class="flex gap8 mt20" style="margin-top:24px;justify-content:center">
+            <button class="btn btn-ghost" style="background:var(--g);color:#fff">1</button>
+            <button class="btn btn-ghost">2</button>
+            <button class="btn btn-ghost">3</button>
+            <button class="btn btn-ghost">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 2: DETAIL
+══════════════════════════════════════════════ -->
+<div class="page" id="p-detail">
+  <div class="pg-header">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="#" onclick="go('overzicht');return false">Marketplace</a> <span>›</span> Alya Sometimes Hides Her Feelings in Russian</div>
+      <h1>Alya Sometimes Hides Her Feelings in Russian — Tome 5</h1>
+      <p>Taifu Comics · 2024 · Softcover · Frans</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wrap">
+      <div class="detail-layout">
+        <!-- links -->
+        <div>
+          <!-- galerij -->
+          <div style="margin-bottom:24px">
+            <img id="main-img" src="https://new.stripinfo.be/images/images/700000/700209.jpg" style="width:100%;max-height:460px;object-fit:contain;border-radius:var(--r6);border:1px solid var(--border);background:#f8f8f8">
+            <div class="flex gap8 mt8" style="margin-top:8px">
+              <img src="https://new.stripinfo.be/images/images/700000/700209.jpg" onclick="document.getElementById('main-img').src=this.src" style="width:64px;height:82px;object-fit:cover;border-radius:4px;border:2px solid var(--g);cursor:pointer">
+              <img src="https://new.stripinfo.be/images/images/700000/700208.jpg" onclick="document.getElementById('main-img').src=this.src" style="width:64px;height:82px;object-fit:cover;border-radius:4px;border:1px solid var(--border);cursor:pointer">
+              <img src="https://new.stripinfo.be/images/images/700000/700202.jpg" onclick="document.getElementById('main-img').src=this.src" style="width:64px;height:82px;object-fit:cover;border-radius:4px;border:1px solid var(--border);cursor:pointer">
+            </div>
+          </div>
+
+          <!-- stripinfo data -->
+          <div class="form-section">
+            <h3>Stripinfo — <a href="https://new.stripinfo.be/nl/strips/57046/306426" target="_blank" style="color:var(--g);font-weight:600;font-size:13px">Bekijk volledige fiche →</a></h3>
+            <table class="specs">
+              <tr><td>Reeks</td><td>Alya Sometimes Hides Her Feelings in Russian</td></tr>
+              <tr><td>Deel</td><td>5</td></tr>
+              <tr><td>Scenario & tekeningen</td><td>Tsuta Suzuki</td></tr>
+              <tr><td>Uitgever</td><td>Taifu Comics</td></tr>
+              <tr><td>Jaar</td><td>2024</td></tr>
+              <tr><td>ISBN</td><td>9782351807606</td></tr>
+              <tr><td>Kaft</td><td>Softcover</td></tr>
+              <tr><td>Taal</td><td>Frans</td></tr>
+            </table>
+          </div>
+
+          <!-- beschrijving -->
+          <div class="form-section">
+            <h3>Beschrijving van de verkoper</h3>
+            <span class="st st-zg" style="margin-bottom:12px;display:inline-block">Zeer goed</span>
+            <p style="font-size:14px;color:var(--tm);line-height:1.65;margin-bottom:14px">Boek in zeer goede staat. Gelezen maar geen kreukels, geen stempel, geen annotaties. Kleine kraslijn op de rug maar nauwelijks zichtbaar. Eerste druk.</p>
+            <div class="flex gap16" style="font-size:13px;color:var(--tm)">
+              <span><strong>Rugschade:</strong> Neen</span>
+              <span><strong>Stempel:</strong> Neen</span>
+              <span><strong>Eerste druk:</strong> Ja</span>
+            </div>
+          </div>
+
+          <!-- verzending -->
+          <div class="form-section">
+            <h3>Verzending</h3>
+            <div class="ship-row">
+              <span class="icon ion-ios-cube"></span>
+              <div><strong>Klein pakket — bpost</strong><br><span class="f12 text-soft">1–3 standaard albums · max 2kg · met trackingcode</span></div>
+              <span class="ship-price">€ 3,50</span>
+            </div>
+            <div class="ship-row">
+              <span class="icon ion-ios-people"></span>
+              <div><strong>Hand aan hand</strong><br><span class="f12 text-soft">Persoonlijke afgifte — neem contact op via berichten</span></div>
+              <span class="ship-price">Gratis</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- rechts: buy box -->
+        <div>
+          <div class="buy-box">
+            <span class="st st-zg" style="margin-bottom:12px;display:inline-block">Zeer goed</span>
+            <div class="buy-price">€ 8,50</div>
+            <div class="buy-total">+ € 3,50 verzending = <strong>€ 12,00 totaal</strong></div>
+
+            <div class="alert alert-green" style="margin-bottom:16px">
+              <span class="icon ion-ios-lock"></span>
+              <span>Betaling via Stripe — geld vrijgegeven na ontvangst</span>
+            </div>
+
+            <button class="btn btn-green btn-lg btn-block mb12" onclick="go('checkout')" style="margin-bottom:10px"><span class="icon ion-ios-cart"></span> Koop nu</button>
+            <button class="btn btn-outline btn-block" onclick="go('berichten')"><span class="icon ion-ios-chatbubbles"></span> Bericht sturen</button>
+
+            <div class="seller-block">
+              <div class="flex gap12 align-center mb12" style="margin-bottom:10px">
+                <div class="seller-ava">W</div>
+                <div>
+                  <div class="fw7" style="font-size:14px">wouter_strips</div>
+                  <div class="f12 text-soft">Lid sinds 2022 · 47 verkopen</div>
+                </div>
+              </div>
+              <div class="stars flex gap8 align-center mb12" style="margin-bottom:6px">
+                <span class="icon ion-ios-star"></span><span class="icon ion-ios-star"></span><span class="icon ion-ios-star"></span><span class="icon ion-ios-star"></span><span class="icon ion-ios-star-half"></span>
+                <span class="f12 text-soft">4.7 (31 reviews)</span>
+              </div>
+              <div class="f12 text-soft">🇧🇪 Particulier · Antwerpen</div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="f12 text-soft" style="line-height:1.9">
+              <div>🛡 5 dagen kopersbescherming</div>
+              <div>🔒 Betaling via Stripe Connect</div>
+              <div><span class="tlink-gray" onclick="alert('Aanbieding melden — nog te implementeren')">⚠ Aanbieding melden</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top:16px"><button class="btn btn-ghost btn-sm" onclick="go('overzicht')">← Terug naar overzicht</button></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 3: AANBIEDING PLAATSEN
+══════════════════════════════════════════════ -->
+<div class="page" id="p-plaatsen">
+  <div class="pg-header">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="#" onclick="go('overzicht');return false">Marketplace</a> <span>›</span> Strip verkopen</div>
+      <h1>Strip verkopen</h1>
+      <p>Voer het ISBN in — we halen de gegevens automatisch op uit onze database</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wrap-sm">
+      <!-- stappen -->
+      <div class="steps">
+        <div class="step now"><div class="step-num">1</div><div class="step-lbl">Artikel</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">2</div><div class="step-lbl">Staat</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">3</div><div class="step-lbl">Foto's</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">4</div><div class="step-lbl">Prijs</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">5</div><div class="step-lbl">Preview</div></div>
+      </div>
+
+      <!-- ISBN -->
+      <div class="isbn-box">
+        <h4><span class="icon ion-ios-barcode"></span> Stap 1 — Zoek via ISBN</h4>
+        <p class="f13 text-soft mb12" style="margin-bottom:12px">Scan de barcode of typ het ISBN. We vullen alles automatisch in vanuit de Stripinfo-database.</p>
+        <div class="isbn-row">
+          <input type="text" id="isbn-in" placeholder="bijv. 9782351807606">
+          <button class="btn btn-green" onclick="showIsbn()"><span class="icon ion-ios-search"></span> Zoeken</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('manual').style.display='block'">Geen ISBN</button>
+        </div>
+        <div class="isbn-result" id="isbn-res">
+          <img src="https://new.stripinfo.be/images/images/700000/700209.jpg" alt="">
+          <div class="meta">
+            <strong>Alya Sometimes Hides Her Feelings in Russian — Tome 5</strong>
+            <span>Tsuta Suzuki · Taifu Comics · 2024 · ISBN: 9782351807606</span>
+            <div class="flex gap8">
+              <button class="btn btn-green btn-sm" onclick="activateStap2()">✓ Dit is het juiste album</button>
+              <button class="btn btn-ghost btn-sm">Niet correct</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- handmatig (verborgen) -->
+      <div id="manual" style="display:none">
+        <div class="form-section">
+          <h3>Handmatig invullen</h3>
+          <div class="form-group"><label>Titel <span class="req">*</span></label><input type="text" placeholder="Volledige titel"></div>
+          <div class="col2"><div class="form-group"><label>Reeks</label><input type="text" placeholder="Naam van de reeks"></div><div class="form-group"><label>Deelnummer</label><input type="text" placeholder="bijv. 5"></div></div>
+        </div>
+      </div>
+
+      <!-- stap 2+ (verborgen tot ISBN bevestigd) -->
+      <div id="stap2-wrap" style="display:none">
+        <!-- staat -->
+        <div class="form-section">
+          <h3>Stap 2 — Staat <span class="req">*</span></h3>
+          <div class="grading">
+            <div class="g-opt sel" onclick="selGrade(this)"><div class="ico">✨</div><div class="lbl">Nieuw</div><div class="sub">Nooit gelezen</div></div>
+            <div class="g-opt" onclick="selGrade(this)"><div class="ico">⭐</div><div class="lbl">Zeer goed</div><div class="sub">Gelezen, gaaf</div></div>
+            <div class="g-opt" onclick="selGrade(this)"><div class="ico">👍</div><div class="lbl">Goed</div><div class="sub">Zichtbaar gebruik</div></div>
+            <div class="g-opt" onclick="selGrade(this)"><div class="ico">📖</div><div class="lbl">Matig</div><div class="sub">Enkele schade</div></div>
+            <div class="g-opt" onclick="selGrade(this)"><div class="ico">⚠️</div><div class="lbl">Slecht</div><div class="sub">Zwaar beschadigd</div></div>
+          </div>
+          <div class="col2 mt16" style="margin-top:16px">
+            <div class="form-group"><label>Rugschade? <span class="req">*</span></label><select><option>Neen</option><option>Ja — licht</option><option>Ja — ernstig</option></select></div>
+            <div class="form-group"><label>Stempel / annotatie? <span class="req">*</span></label><select><option>Neen</option><option>Ja</option></select></div>
+            <div class="form-group"><label>Eerste druk?</label><select><option>Onbekend</option><option>Ja</option><option>Neen — herdruk</option></select></div>
+            <div class="form-group"><label>Volledig?</label><select><option>Ja</option><option>Neen</option></select></div>
+          </div>
+          <div class="form-group mt12"><label>Beschrijving (optioneel)</label><textarea rows="3" placeholder="Extra details voor de koper... (max. 500 tekens)" maxlength="500"></textarea></div>
+        </div>
+
+        <!-- foto's -->
+        <div class="form-section">
+          <h3>Stap 3 — Foto's <span class="req">*</span> (min. 1, max. 10)</h3>
+          <p class="f12 text-soft mb12">Tip: cover + rug + eventuele schade. Betere foto's = minder klachten.</p>
+          <div class="photo-drop" onclick="document.getElementById('foto-in').click()">
+            <div style="font-size:32px;margin-bottom:6px">📷</div>
+            <strong style="font-size:14px">Klik om foto's te uploaden</strong><br>
+            <span class="f12">JPG of PNG · max. 5 MB per foto</span>
+          </div>
+          <input type="file" id="foto-in" multiple accept="image/*" style="display:none" onchange="previewFotos(this)">
+          <div class="photo-grid" id="foto-grid">
+            <div class="photo-thumb"><img src="https://new.stripinfo.be/images/images/700000/700209.jpg" style="width:100%;height:100%;object-fit:cover"></div>
+          </div>
+        </div>
+
+        <!-- prijs & verzending -->
+        <div class="form-section">
+          <h3>Stap 4 — Prijs &amp; verzending</h3>
+          <div class="col2">
+            <div class="form-group">
+              <label>Verkoopprijs <span class="req">*</span></label>
+              <input type="number" id="vp" min="2" step="0.5" placeholder="bijv. 8.50" oninput="calcComm()">
+              <div class="hint">Minimum € 2,00</div>
+            </div>
+            <div class="form-group">
+              <label>Verzendkosten</label>
+              <select id="vs" onchange="calcComm()">
+                <option value="2.00">Brief / envelop — € 2,00 (tot 350g)</option>
+                <option value="3.50" selected>Klein pakket — € 3,50 (tot 2kg)</option>
+                <option value="5.50">Groot pakket — € 5,50 (tot 5kg)</option>
+                <option value="0">Inbegrepen in prijs</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label><input type="checkbox" style="accent-color:var(--g);margin-right:6px"> Hand aan hand mogelijk</label></div>
+          <div class="calc">
+            <div class="label">Jij ontvangt</div>
+            <div class="row"><span>Verkoopprijs</span><span id="c-prijs">— vul prijs in</span></div>
+            <div class="row"><span>Commissie Stripinfo (8%)</span><span id="c-comm">—</span></div>
+            <div class="row total"><span>Jij ontvangt netto</span><span id="c-netto">—</span></div>
+            <div class="row" style="font-size:12px;color:var(--ts);margin-top:4px"><span>Totaal voor koper</span><span id="c-total">—</span></div>
+          </div>
+        </div>
+
+        <!-- preview & publiceren -->
+        <div class="form-section">
+          <h3>Stap 5 — Preview &amp; publiceren</h3>
+          <div class="alert alert-blue">
+            <span class="icon ion-ios-information-circle"></span>
+            <span>Na publicatie is je aanbieding 60 dagen actief. Je kan ze daarna onbeperkt verlengen.</span>
+          </div>
+          <div class="flex gap12 mt12">
+            <button class="btn btn-ghost" style="flex:1">Opslaan als concept</button>
+            <button class="btn btn-green" style="flex:2" onclick="go('aanbiedingen')"><span class="icon ion-ios-checkmark-circle"></span> Aanbieding publiceren</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 4: MIJN AANBIEDINGEN
+══════════════════════════════════════════════ */
+<div class="page" id="p-aanbiedingen">
+  <div class="pg-header">
+    <div class="wrap">
+      <div class="breadcrumb">Marketplace <span>›</span> Mijn dashboard</div>
+      <h1>Mijn marketplace</h1>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wrap">
+      <div class="dash-layout">
+        <!-- nav -->
+        <div class="dash-nav">
+          <a class="on" onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
+          <a onclick="go('verkopen');return false"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
+          <a onclick="go('aankopen');return false"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
+          <a onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
+          <a onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
+        </div>
+
+        <!-- content -->
+        <div>
+          <!-- stats -->
+          <div class="stat-grid">
+            <div class="stat"><div class="val text-green">4</div><div class="lbl">Actieve aanbiedingen</div></div>
+            <div class="stat"><div class="val" style="color:var(--b)">2</div><div class="lbl">Openstaande verkopen</div></div>
+            <div class="stat"><div class="val" style="color:#7a1fa2">€ 42</div><div class="lbl">In escrow</div></div>
+            <div class="stat"><div class="val">€ 186</div><div class="lbl">Totaal uitbetaald</div></div>
+          </div>
+
+          <!-- tabs -->
+          <div class="tabs">
+            <button class="tab-btn on" onclick="tab(this,'tab-actief')">Actief (4)</button>
+            <button class="tab-btn" onclick="tab(this,'tab-verkocht')">Verkocht (2)</button>
+            <button class="tab-btn" onclick="tab(this,'tab-verlopen')">Verlopen (1)</button>
+          </div>
+
+          <div class="tab-pane on" id="tab-actief">
+            <table class="mp-table">
+              <thead><tr><th></th><th>Aanbieding</th><th>Staat</th><th>Prijs</th><th>Status</th><th>Verloopt</th><th>Acties</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><img class="timg" src="https://new.stripinfo.be/images/images/700000/700209.jpg"></td>
+                  <td><strong>Alya Tome 5</strong><br><span class="f12 text-soft">Taifu Comics · 2024</span></td>
+                  <td><span class="st st-zg">Zeer goed</span></td>
+                  <td><strong>€ 8,50</strong><br><span class="f11 text-soft">+ € 3,50 verzending</span></td>
+                  <td><span class="badge badge-green">Actief</span></td>
+                  <td class="f12 text-soft">over 54 dagen</td>
+                  <td class="f12">
+                    <span class="tlink" onclick="go('plaatsen')">Bewerken</span> ·
+                    <span class="tlink-gray">Verbergen</span> ·
+                    <span class="tlink-red">Verwijderen</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><img class="timg" src="https://new.stripinfo.be/images/images/700000/700208.jpg"></td>
+                  <td><strong>Alya Tome 9</strong><br><span class="f12 text-soft">Taifu Comics · 2025</span></td>
+                  <td><span class="st st-g">Goed</span></td>
+                  <td><strong>€ 6,00</strong><br><span class="f11 text-soft">+ € 2,89 verzending</span></td>
+                  <td><span class="badge badge-green">Actief</span></td>
+                  <td class="f12 text-soft">over 47 dagen</td>
+                  <td class="f12"><span class="tlink" onclick="go('plaatsen')">Bewerken</span> · <span class="tlink-red">Verwijderen</span></td>
+                </tr>
+                <tr>
+                  <td><img class="timg" src="https://new.stripinfo.be/images/images/688000/690124.jpg"></td>
+                  <td><strong>Malanotte</strong><br><span class="f12 text-soft">2024</span></td>
+                  <td><span class="st st-n">Nieuw</span></td>
+                  <td><strong>€ 12,00</strong></td>
+                  <td><span class="badge badge-green">Actief</span></td>
+                  <td><div class="timer urgent"><span class="days">7</span> dagen</div></td>
+                  <td class="f12"><span class="tlink">Verlengen</span> · <span class="tlink-red">Verwijderen</span></td>
+                </tr>
+                <tr>
+                  <td><img class="timg" src="https://new.stripinfo.be/images/images/696000/698554.jpg"></td>
+                  <td><strong>Harvest Moons</strong></td>
+                  <td><span class="st st-zg">Zeer goed</span></td>
+                  <td><strong>€ 9,00</strong></td>
+                  <td><span class="badge badge-gold">Gereserveerd</span></td>
+                  <td class="f12 text-soft">over 38 dagen</td>
+                  <td class="f12"><span class="tlink-gray">Bekijken</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tab-pane" id="tab-verkocht">
+            <table class="mp-table">
+              <thead><tr><th></th><th>Aanbieding</th><th>Koper</th><th>Bedrag</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><img class="timg" src="https://new.stripinfo.be/images/images/700000/700202.jpg"></td>
+                  <td><strong>Alya Tome 17</strong><br><span class="f12 text-soft">26/02/2026</span></td>
+                  <td class="f13">pieter_b</td>
+                  <td><strong>€ 12,00</strong><br><span class="f11 text-soft">Netto: € 11,04</span></td>
+                  <td><span class="badge badge-blue">Verzonden</span><br><div class="timer ok mt8"><span class="days">3</span> dagen tot payout</div></td>
+                  <td><span class="tlink" onclick="go('verkopen')">Bekijken</span></td>
+                </tr>
+                <tr>
+                  <td><img class="timg" src="https://new.stripinfo.be/images/images/696000/696420.jpg"></td>
+                  <td><strong>Comanche T10</strong></td>
+                  <td class="f13">marieke_v</td>
+                  <td><strong>€ 15,00</strong><br><span class="f11" style="color:var(--r)">Klacht</span></td>
+                  <td><span class="badge badge-red">Klacht</span></td>
+                  <td><span class="tlink-red fw7" onclick="go('klacht')">Bekijk klacht</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tab-pane" id="tab-verlopen">
+            <table class="mp-table">
+              <thead><tr><th></th><th>Aanbieding</th><th>Prijs</th><th>Verlopen op</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><img class="timg" src="https://new.stripinfo.be/images/images/692000/695768.jpg"></td>
+                  <td><strong>Blake & Mortimer — Atlantische dreiging</strong></td>
+                  <td>€ 7,00</td>
+                  <td class="f12 text-soft">01/01/2026</td>
+                  <td><span class="tlink fw7" onclick="go('plaatsen')">Opnieuw plaatsen</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 5: MIJN VERKOPEN (trackingcode invoer)
+══════════════════════════════════════════════ -->
+<div class="page" id="p-verkopen">
+  <div class="pg-header">
+    <div class="wrap">
+      <div class="breadcrumb">Marketplace <span>›</span> Mijn verkopen</div>
+      <h1>Mijn verkopen</h1>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wrap">
+      <div class="dash-layout">
+        <div class="dash-nav">
+          <a onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
+          <a class="on"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
+          <a onclick="go('aankopen');return false"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
+          <a onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
+          <a onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
+        </div>
+        <div>
+          <div class="alert alert-orange">
+            <span class="icon ion-ios-alert"></span>
+            <div><strong>Actie vereist:</strong> 1 verkoop wacht op trackingcode. Voer in om je betaling te ontvangen.</div>
+          </div>
+          <table class="mp-table">
+            <thead><tr><th></th><th>Artikel</th><th>Koper</th><th>Bedrag</th><th>Status</th><th>Actie</th></tr></thead>
+            <tbody>
+              <tr style="background:#fffbf0">
+                <td><img class="timg" src="https://new.stripinfo.be/images/images/700000/700209.jpg"></td>
+                <td><strong>Alya Tome 5</strong><br><span class="f12 text-soft">Verkocht: 26/02/2026</span></td>
+                <td class="f13">pieter_b<br><span class="f11 text-soft">Gent, BE</span></td>
+                <td><strong>€ 8,50</strong><br><span class="f11 text-soft">Netto: € 7,84</span></td>
+                <td><span class="badge badge-gold">Wacht op verzending</span><br><span class="f11" style="color:var(--o);display:block;margin-top:3px">⚠ Verzend binnen 5 werkdagen</span></td>
+                <td id="track-cell">
+                  <button class="btn btn-green btn-sm" onclick="showTrackForm()"><span class="icon ion-ios-barcode"></span> Trackingcode</button>
+                </td>
+              </tr>
+              <tr>
+                <td><img class="timg" src="https://new.stripinfo.be/images/images/700000/700202.jpg"></td>
+                <td><strong>Alya Tome 17</strong><br><span class="f12 text-soft">20/02/2026</span></td>
+                <td class="f13">marieke_v</td>
+                <td><strong>€ 12,00</strong><br><span class="f11 text-soft">Netto: € 11,04</span></td>
+                <td><span class="badge badge-blue">Verzonden</span><br><div class="timer ok" style="margin-top:4px"><span class="days">3</span> dagen tot payout</div></td>
+                <td class="f12 text-soft">Wacht op koper</td>
+              </tr>
+              <tr>
+                <td><img class="timg" src="https://new.stripinfo.be/images/images/688000/690124.jpg"></td>
+                <td><strong>Malanotte</strong></td>
+                <td class="f13">joris_comics</td>
+                <td><strong>€ 12,00</strong><br><span class="f11 text-green fw7">✓ Uitbetaald € 11,04</span></td>
+                <td><span class="badge badge-gray">Afgerond</span></td>
+                <td class="f12 text-soft">—</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- tracking inline form (verborgen) -->
+          <div id="track-form" style="display:none;margin-top:16px">
+            <div class="form-section">
+              <h3><span class="icon ion-ios-barcode"></span> Trackingcode invoeren — Alya Tome 5</h3>
+              <div class="col2">
+                <div class="form-group"><label>Vervoerder <span class="req">*</span></label><select><option>bpost</option><option>PostNL</option><option>DPD</option><option>Andere</option></select></div>
+                <div class="form-group"><label>Trackingcode <span class="req">*</span></label><input type="text" placeholder="bijv. BE123456789" id="track-in"></div>
+              </div>
+              <div class="form-group"><label>Verzenddatum</label><input type="text" value="26/02/2026"></div>
+              <div class="flex gap12">
+                <button class="btn btn-ghost" onclick="document.getElementById('track-form').style.display='none'">Annuleren</button>
+                <button class="btn btn-green" onclick="confirmTracking()"><span class="icon ion-ios-checkmark-circle"></span> Bevestigen & versturen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 6: MIJN AANKOPEN
+══════════════════════════════════════════════ -->
+<div class="page" id="p-aankopen">
+  <div class="pg-header">
+    <div class="wrap">
+      <div class="breadcrumb">Marketplace <span>›</span> Mijn aankopen</div>
+      <h1>Mijn aankopen</h1>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wrap">
+      <div class="dash-layout">
+        <div class="dash-nav">
+          <a onclick="go('aanbiedingen');return false"><span class="icon ion-ios-pricetag"></span> Mijn aanbiedingen</a>
+          <a onclick="go('verkopen');return false"><span class="icon ion-ios-cart"></span> Mijn verkopen</a>
+          <a class="on"><span class="icon ion-ios-bag"></span> Mijn aankopen</a>
+          <a onclick="go('berichten');return false"><span class="icon ion-ios-chatbubbles"></span> Berichten<span class="badge-n">2</span></a>
+          <a onclick="go('plaatsen');return false" style="background:var(--gl);color:var(--g);font-weight:700"><span class="icon ion-ios-add-circle"></span> Nieuwe aanbieding</a>
+        </div>
+        <div>
+          <table class="mp-table">
+            <thead><tr><th></th><th>Artikel</th><th>Verkoper</th><th>Betaald</th><th>Status</th><th>Actie</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><img class="timg" src="https://new.stripinfo.be/images/images/700000/700209.jpg"></td>
+                <td><strong>Alya Tome 5</strong><br><span class="f12 text-soft">Besteld: 26/02/2026</span></td>
+                <td class="f13">wouter_strips</td>
+                <td><strong>€ 12,00</strong><br><span class="f11 text-soft">incl. verzending</span></td>
+                <td><span class="badge badge-blue">Verzonden</span><br><span class="f11 text-soft mt8" style="display:block;margin-top:4px">BE123456789</span></td>
+                <td>
+                  <button class="btn btn-green btn-sm" onclick="document.getElementById('ontvangst').style.display='block'">✓ Ontvangen</button><br>
+                  <span class="tlink-red f12" style="margin-top:6px;display:block" onclick="go('klacht')">Probleem melden</span>
+                </td>
+              </tr>
+              <tr>
+                <td><img class="timg" src="https://new.stripinfo.be/images/images/688000/690124.jpg"></td>
+                <td><strong>Malanotte</strong><br><span class="f12 text-soft">10/02/2026</span></td>
+                <td class="f13">jan_strips_be</td>
+                <td><strong>€ 8,00</strong></td>
+                <td><span class="badge badge-gray">Afgerond</span></td>
+                <td><span class="tlink f12">Review plaatsen</span></td>
+              </tr>
+              <tr>
+                <td><img class="timg" src="https://new.stripinfo.be/images/images/696000/698554.jpg"></td>
+                <td><strong>Harvest Moons</strong><br><span class="f12 text-soft">05/02/2026</span></td>
+                <td class="f13">stripkoning_nl</td>
+                <td><strong>€ 14,50</strong></td>
+                <td><span class="badge badge-red">Klacht ingediend</span></td>
+                <td><span class="tlink-red fw7 f12" onclick="go('klacht')">Bekijk klacht</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- ontvangst bevestigen inline -->
+          <div id="ontvangst" style="display:none;margin-top:16px">
+            <div class="alert alert-green">
+              <span class="icon ion-ios-checkmark-circle" style="font-size:20px"></span>
+              <div style="flex:1">
+                <strong>Bevestig ontvangst — Alya Tome 5</strong><br>
+                <span class="f12">Alles in orde? Betaling wordt direct vrijgegeven aan de verkoper.</span>
+                <div class="flex gap8 mt12" style="margin-top:10px">
+                  <button class="btn btn-green btn-sm" onclick="this.closest('#ontvangst').innerHTML='<div class=alert-green alert style=padding:12px;border-radius:6px>✅ Ontvangst bevestigd — betaling vrijgegeven aan verkoper!</div>'">Bevestig — alles OK</button>
+                  <button class="btn btn-ghost btn-sm" onclick="document.getElementById('ontvangst').style.display='none'">Annuleren</button>
+                </div>
+              </div>
+              <div class="f12 text-soft" style="white-space:nowrap">⏱ Auto in <strong>3 dagen</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 7: CHECKOUT
+══════════════════════════════════════════════ -->
+<div class="page" id="p-checkout">
+  <div class="pg-header">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="#" onclick="go('detail');return false">Aanbieding</a> <span>›</span> Afrekenen</div>
+      <h1><span class="icon ion-ios-lock"></span> Veilig afrekenen</h1>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wrap-sm">
+      <div class="steps" style="margin-bottom:28px">
+        <div class="step now"><div class="step-num">1</div><div class="step-lbl">Adres</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">2</div><div class="step-lbl">Betaling</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">3</div><div class="step-lbl">Bevestiging</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:24px">
+        <div>
+          <div class="form-section">
+            <h3>Leveringsadres</h3>
+            <div class="col2">
+              <div class="form-group"><label>Voornaam <span class="req">*</span></label><input type="text" value="Christophe"></div>
+              <div class="form-group"><label>Achternaam <span class="req">*</span></label><input type="text" value="Declercq"></div>
+            </div>
+            <div class="form-group"><label>Straat en nummer <span class="req">*</span></label><input type="text" value="Grote Markt 1"></div>
+            <div class="col3">
+              <div class="form-group"><label>Postcode <span class="req">*</span></label><input type="text" value="9000"></div>
+              <div class="form-group"><label>Gemeente <span class="req">*</span></label><input type="text" value="Gent"></div>
+              <div class="form-group"><label>Land</label><select><option>België</option><option>Nederland</option></select></div>
+            </div>
+            <div class="form-group"><label>Leveringsinstructies (optioneel)</label><input type="text" placeholder="bijv. bel aan, 2de verdieping"></div>
+            <button class="btn btn-green btn-lg btn-block" onclick="go('aankopen')">Verder naar betaling →</button>
+          </div>
+          <div class="form-section">
+            <h3>Betaling via Stripe</h3>
+            <div class="alert alert-green mb12">
+              <span class="icon ion-ios-lock"></span>
+              <span>Betaling via Stripe — geld pas vrijgegeven na bevestiging ontvangst</span>
+            </div>
+            <div style="background:#f8f8f8;border:1px solid var(--border);border-radius:var(--r6);padding:24px;text-align:center;color:var(--ts)">
+              <div style="font-size:36px;margin-bottom:8px">🔒</div>
+              <strong style="color:var(--t);font-size:15px">Stripe Checkout</strong><br>
+              <span class="f13">Bancontact · Visa · Mastercard · iDEAL</span>
+            </div>
+          </div>
+        </div>
+        <!-- samenvatting -->
+        <div>
+          <div class="buy-box">
+            <div class="card-head">Jouw bestelling</div>
+            <div class="flex gap12 align-center" style="padding:14px 0;border-bottom:1px solid var(--border)">
+              <img src="https://new.stripinfo.be/images/images/700000/700209.jpg" style="width:54px;border-radius:4px;border:1px solid var(--border)">
+              <div><div class="fw7 f13">Alya Tome 5</div><div class="f12 text-soft">Staat: Zeer goed</div><div class="fw7 text-green">€ 8,50</div></div>
+            </div>
+            <div class="buy-row"><span>Artikel</span><span>€ 8,50</span></div>
+            <div class="buy-row"><span>Verzending</span><span>€ 3,50</span></div>
+            <div class="buy-row"><span>Totaal</span><span>€ 12,00</span></div>
+            <div class="f12 text-soft" style="margin-top:14px;line-height:1.9">
+              <div>🛡 5 dagen kopersbescherming</div>
+              <div>🔒 Stripe Connect — 100% veilig</div>
+              <div>↩ Terugbetaling bij klacht</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 8: KLACHT DETAIL
+══════════════════════════════════════════════ -->
+<div class="page" id="p-klacht">
+  <div class="klacht-header">
+    <div class="wrap">
+      <div class="breadcrumb"><a href="#" onclick="go('aankopen');return false">Mijn aankopen</a> <span>›</span> Klacht</div>
+      <h1><span class="icon ion-ios-alert"></span> Klacht — Harvest Moons</h1>
+      <p>Ingediend op 08/02/2026 · Ref: KL-2026-0042</p>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wrap">
+      <div style="display:grid;grid-template-columns:1fr 290px;gap:24px">
+        <div>
+          <div class="alert alert-orange">
+            <span class="icon ion-ios-time"></span>
+            <div style="flex:1"><strong>In behandeling</strong> — Beslissing verwacht voor 01/03/2026<br><span class="f12">Na 21 dagen zonder beslissing: automatische payout aan verkoper.</span></div>
+            <div class="timer urgent" style="margin-left:12px"><span class="days">5</span><span class="f11">dagen</span></div>
+          </div>
+
+          <div class="form-section">
+            <h3>Klachtgegevens</h3>
+            <table class="specs">
+              <tr><td>Reden</td><td><strong>Artikel niet zoals beschreven</strong></td></tr>
+              <tr><td>Besteld</td><td>05/02/2026</td></tr>
+              <tr><td>Klacht ingediend</td><td>08/02/2026</td></tr>
+              <tr><td>Bedrag in escrow</td><td>€ 14,50</td></tr>
+              <tr><td>Verkoper</td><td>stripkoning_nl</td></tr>
+            </table>
+            <div style="background:#f8f8f8;border-radius:4px;padding:12px;margin-top:12px;font-size:13px;color:var(--tm)">
+              <strong>Beschrijving:</strong><br>"De strip was aangeboden als 'Zeer goed' maar is duidelijk beschadigd. Er is ook een grote bibliotheekstempel op de binnenkant — niet vermeld."
+            </div>
+          </div>
+
+          <div class="form-section" style="padding:0">
+            <div class="chat-wrap" style="height:auto">
+              <div class="chat-head">Klachtenthread <span class="f12 text-soft">— zichtbaar voor alle partijen + admin</span></div>
+              <div class="chat-msgs" style="max-height:260px">
+                <div class="msg other"><div class="who">stripinfo.be admin</div><div class="bubble">Klacht ontvangen. We onderzoeken dit. Beide partijen kunnen hier reageren.</div><div class="ts">08/02 09:14</div></div>
+                <div class="msg me"><div class="bubble">Ik heb foto's gemaakt van de schade. De rug is volledig gekreukt en de bibliotheekstempel was nergens vermeld. Ik verwacht terugbetaling.</div><div class="ts">08/02 10:22</div></div>
+                <div class="msg other"><div class="who">stripkoning_nl (verkoper)</div><div class="bubble">Ik begrijp de ontevredenheid. Ik ben bereid € 5 terugbetaling te doen.</div><div class="ts">09/02 14:05</div></div>
+                <div class="msg me"><div class="bubble">€ 5 is onvoldoende. De stempel alleen al maakt het boek onverkoopbaar. Ik vraag volledige terugbetaling.</div><div class="ts">09/02 15:30</div></div>
+              </div>
+              <div class="chat-input">
+                <input type="text" placeholder="Schrijf een bericht...">
+                <button>Verstuur</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="buy-box">
+            <div class="card-head" style="padding:12px 0 12px">Artikel</div>
+            <div class="flex gap10 align-center" style="margin-bottom:14px">
+              <img src="https://new.stripinfo.be/images/images/696000/698554.jpg" style="width:50px;border-radius:4px">
+              <div><div class="fw7 f13">Harvest Moons</div><div class="text-green fw7">€ 14,50</div></div>
+            </div>
+            <div class="alert alert-orange" style="margin-bottom:12px">⏱ Bedrag in escrow — niet vrijgegeven tot beslissing</div>
+            <div class="f12 text-soft" style="line-height:1.9">
+              <div>📸 Bewijs toevoegen via thread</div>
+              <div>⚖️ Admin beslist binnen 21 dagen</div>
+              <div>↩ Bij gelijk: volledige terugbetaling</div>
+            </div>
+            <div class="divider"></div>
+            <button class="btn btn-ghost btn-block btn-sm" onclick="go('aankopen')">← Terug naar aankopen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 9: BERICHTEN
+══════════════════════════════════════════════ -->
+<div class="page" id="p-berichten">
+  <div class="pg-header">
+    <div class="wrap">
+      <div class="breadcrumb">Marketplace <span>›</span> Berichten</div>
+      <h1><span class="icon ion-ios-chatbubbles"></span> Berichten</h1>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="wrap">
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:20px">
+        <!-- lijst -->
+        <div class="conv-list">
+          <div style="padding:10px 14px;background:#f6f6f6;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ts)">Gesprekken</div>
+          <div class="conv-item on">
+            <div class="flex justify-between"><span class="cn">wouter_strips</span><span class="ct">13:22</span></div>
+            <div class="cm">Re: Alya Tome 5 — Is de rug...</div>
+            <span style="background:var(--r);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px">1</span>
+          </div>
+          <div class="conv-item" onclick="this.classList.add('on');document.querySelectorAll('.conv-item').forEach(e=>e!==this&&e.classList.remove('on'))">
+            <div class="flex justify-between"><span class="cn">jan_strips_be</span><span class="ct">gisteren</span></div>
+            <div class="cm">Bedankt voor de vlotte levering!</div>
+          </div>
+          <div class="conv-item" onclick="this.classList.add('on');document.querySelectorAll('.conv-item').forEach(e=>e!==this&&e.classList.remove('on'))">
+            <div class="flex justify-between"><span class="cn">stripkoning_nl</span><span class="ct">3 dagen</span></div>
+            <div class="cm">Ik stuur morgen op</div>
+          </div>
+        </div>
+
+        <!-- gesprek -->
+        <div class="chat-wrap">
+          <div class="chat-head">
+            <span>wouter_strips</span>
+            <span class="f12 text-soft">Alya Tome 5 · <span class="tlink" onclick="go('detail')">Bekijk aanbieding →</span></span>
+          </div>
+          <div class="chat-msgs">
+            <div class="msg other"><div class="who">wouter_strips</div><div class="bubble">Hoi! Is het boek nog beschikbaar? Is de rug in goede staat?</div><div class="ts">25/02 18:44</div></div>
+            <div class="msg me"><div class="bubble">Hoi! Ja, nog beschikbaar. De rug is perfect — geen kreukels. Ik kan een extra foto sturen als je wil?</div><div class="ts">25/02 19:10</div></div>
+            <div class="msg other"><div class="who">wouter_strips</div><div class="bubble">Dat zou fijn zijn! En is het de eerste druk?</div><div class="ts">26/02 13:22</div></div>
+          </div>
+          <div class="chat-input">
+            <input type="text" id="msg-in" placeholder="Schrijf een bericht... (geen telefoonnr. of e-mail)">
+            <button onclick="sendMsg()">Verstuur</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+// ── ROUTING ──────────────────────────────────
+const pages = ['overzicht','detail','plaatsen','aanbiedingen','verkopen','aankopen','checkout','klacht','berichten'];
+
+function go(name) {
+  pages.forEach(p => {
+    const el = document.getElementById('p-'+p);
+    if(el) el.classList.toggle('active', p === name);
+  });
+  document.querySelectorAll('#pb .pnav button').forEach((btn,i) => {
+    btn.classList.toggle('on', pages[i] === name);
+  });
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+// ── ISBN DEMO ─────────────────────────────────
+function showIsbn() {
+  const v = document.getElementById('isbn-in')?.value;
+  if(v && v.length >= 6) {
+    document.getElementById('isbn-res')?.classList.add('vis');
+  }
+}
+
+function activateStap2() {
+  document.getElementById('stap2-wrap').style.display = 'block';
+  document.querySelector('.isbn-box').style.borderColor = 'var(--g)';
+  document.querySelector('.isbn-box').style.background = 'var(--gl)';
+  document.getElementById('stap2-wrap').scrollIntoView({behavior:'smooth'});
+}
+
+// ── GRADING ───────────────────────────────────
+function selGrade(el) {
+  document.querySelectorAll('.g-opt').forEach(e => e.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ── COMMISSION CALC ───────────────────────────
+function calcComm() {
+  const p = parseFloat(document.getElementById('vp')?.value) || 0;
+  const s = parseFloat(document.getElementById('vs')?.value) || 0;
+  const comm = p > 0 ? Math.max(p * 0.08, 0.75) : 0;
+  const netto = p - comm;
+  const fmt = v => v > 0 ? '€ ' + v.toFixed(2) : '—';
+  document.getElementById('c-prijs').textContent  = fmt(p);
+  document.getElementById('c-comm').textContent   = p > 0 ? '€ ' + comm.toFixed(2) + ' (8%)' : '—';
+  document.getElementById('c-netto').textContent  = fmt(netto);
+  document.getElementById('c-total').textContent  = p > 0 ? '€ ' + (p + s).toFixed(2) : '—';
+}
+
+// ── TABS ──────────────────────────────────────
+function tab(btn, pane) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(pane)?.classList.add('on');
+}
+
+// ── TRACKING ──────────────────────────────────
+function showTrackForm() {
+  document.getElementById('track-form').style.display = 'block';
+  document.getElementById('track-form').scrollIntoView({behavior:'smooth'});
+}
+
+function confirmTracking() {
+  const code = document.getElementById('track-in').value || 'BE123456789';
+  document.getElementById('track-cell').innerHTML =
+    '<span class="badge badge-blue">Verzonden ✓</span><div class="f11 text-soft" style="margin-top:4px">'+code+'</div>';
+  document.getElementById('track-form').style.display = 'none';
+  document.querySelector('.alert-orange').innerHTML =
+    '<span class="icon ion-ios-checkmark-circle" style="font-size:18px"></span>' +
+    '<span>Trackingcode succesvol ingevoerd. Koper wordt op de hoogte gesteld.</span>';
+  document.querySelector('.alert-orange').className = 'alert alert-green';
+}
+
+// ── FOTO UPLOAD PREVIEW ───────────────────────
+function previewFotos(input) {
+  const grid = document.getElementById('foto-grid');
+  Array.from(input.files).forEach(file => {
+    const div = document.createElement('div');
+    div.className = 'photo-thumb';
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+    div.appendChild(img);
+    grid.appendChild(div);
+  });
+}
+
+// ── CHAT ──────────────────────────────────────
+function sendMsg() {
+  const inp = document.getElementById('msg-in');
+  if(!inp?.value.trim()) return;
+  const msgs = inp.closest('.chat-wrap')?.querySelector('.chat-msgs');
+  const div = document.createElement('div');
+  div.className = 'msg me';
+  div.innerHTML = '<div class="bubble">'+inp.value+'</div><div class="ts">Nu</div>';
+  msgs?.appendChild(div);
+  msgs?.scrollTo({top:99999, behavior:'smooth'});
+  inp.value = '';
+}
+document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==='Enter') sendMsg(); });
+</script>
+</body>
+</html>
