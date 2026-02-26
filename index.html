@@ -439,6 +439,7 @@ input[type=range]{width:100%;accent-color:var(--g)}
     <button onclick="go('checkout')">7. Checkout</button>
     <button onclick="go('klacht')">8. Klacht</button>
     <button onclick="go('berichten')">9. Berichten</button>
+    <button onclick="go('admin')" style="background:#7a1a0f;border-color:#a02020;color:#ffcccc">🔒 10. Admin</button>
   </div>
 </div>
 
@@ -1321,6 +1322,15 @@ input[type=range]{width:100%;accent-color:var(--g)}
             <div class="msg other"><div class="who">wouter_strips</div><div class="bubble">Hoi! Is het boek nog beschikbaar? Is de rug in goede staat?</div><div class="ts">25/02 18:44</div></div>
             <div class="msg me"><div class="bubble">Hoi! Ja, nog beschikbaar. De rug is perfect — geen kreukels. Ik kan een extra foto sturen als je wil?</div><div class="ts">25/02 19:10</div></div>
             <div class="msg other"><div class="who">wouter_strips</div><div class="bubble">Dat zou fijn zijn! En is het de eerste druk?</div><div class="ts">26/02 13:22</div></div>
+            <!-- GEBLOKKEERD BERICHT — automatische detectie -->
+            <div style="background:#fff8e6;border:1px solid #f0c040;border-radius:8px;padding:10px 14px;font-size:12px;color:#7a5500;display:flex;gap:8px;align-items:flex-start">
+              <span style="font-size:16px">⚠️</span>
+              <div>
+                <strong>Bericht automatisch geblokkeerd</strong><br>
+                Dit bericht bevat contactgegevens of een verwijzing naar betaling buiten het platform. Om jou te beschermen werd dit bericht niet afgeleverd.<br>
+                <span style="color:#999;font-size:11px">26/02 14:05 · Reden: telefoonnummer gedetecteerd</span>
+              </div>
+            </div>
           </div>
           <div class="chat-input">
             <input type="text" id="msg-in" placeholder="Schrijf een bericht... (geen telefoonnr. of e-mail)">
@@ -1336,8 +1346,20 @@ input[type=range]{width:100%;accent-color:var(--g)}
      JAVASCRIPT
 ══════════════════════════════════════════════ -->
 <script>
+// ── ADMIN TABS ───────────────────────────────
+function admTab(btn, pane) {
+  document.querySelectorAll('.adm-tab').forEach(b => {
+    b.style.borderBottomColor = 'transparent';
+    b.style.color = '#aaa';
+  });
+  document.querySelectorAll('.adm-pane').forEach(p => p.style.display = 'none');
+  btn.style.borderBottomColor = '#e8192c';
+  btn.style.color = '#fff';
+  document.getElementById(pane).style.display = 'block';
+}
+
 // ── ROUTING ──────────────────────────────────
-const pages = ['overzicht','detail','plaatsen','aanbiedingen','verkopen','aankopen','checkout','klacht','berichten'];
+const pages = ['overzicht','detail','plaatsen','aanbiedingen','verkopen','aankopen','checkout','klacht','berichten','admin'];
 
 function go(name) {
   pages.forEach(p => {
@@ -1437,6 +1459,340 @@ function sendMsg() {
 }
 document.getElementById('msg-in')?.addEventListener('keydown', e => { if(e.key==='Enter') sendMsg(); });
 </script>
+
+<!-- MELD MODAL -->
+<div id="meld-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:10px;padding:28px;width:440px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+    <div style="font-size:17px;font-weight:800;margin-bottom:4px">⚠ Meld aanbieding of gebruiker</div>
+    <div style="font-size:13px;color:#999;margin-bottom:18px">Jouw melding is anoniem voor de verkoper. Admin behandelt dit binnen 24u.</div>
+    <div style="margin-bottom:14px">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Reden <span style="color:#c0392b">*</span></label>
+      <select style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit">
+        <option value="">— Kies een reden —</option>
+        <option>Poging tot betaling buiten platform</option>
+        <option>Verdacht gedrag</option>
+        <option>Spam</option>
+        <option>Oplichting</option>
+        <option>Ongepast bericht</option>
+        <option>Vals profiel</option>
+        <option>Andere</option>
+      </select>
+    </div>
+    <div style="margin-bottom:18px">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px">Toelichting (optioneel)</label>
+      <textarea rows="3" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:inherit" placeholder="Beschrijf wat er misging..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button onclick="document.getElementById('meld-modal').style.display='none'" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:6px;background:#f5f5f5;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Annuleren</button>
+      <button onclick="document.getElementById('meld-modal').style.display='none';document.getElementById('meld-confirm').style.display='flex'" style="flex:2;padding:10px;border:none;border-radius:6px;background:#c0392b;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Melding versturen</button>
+    </div>
+  </div>
+</div>
+
+<!-- MELD BEVESTIGING -->
+<div id="meld-confirm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:10px;padding:28px;width:380px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+    <div style="font-size:40px;margin-bottom:10px">✅</div>
+    <div style="font-size:17px;font-weight:800;margin-bottom:8px">Melding ontvangen</div>
+    <div style="font-size:13px;color:#555;margin-bottom:20px">Admin behandelt je melding binnen 24 uur. Je hoort van ons als er actie ondernomen wordt.</div>
+    <button onclick="document.getElementById('meld-confirm').style.display='none'" style="padding:10px 28px;border:none;border-radius:6px;background:#1f7a45;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Sluiten</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 10: ADMIN MODERATIE DASHBOARD
+══════════════════════════════════════════════ -->
+<div class="page" id="p-admin">
+  <div style="background:linear-gradient(135deg,#1a0a0a,#4a1010);padding:24px 0 20px;margin-bottom:0">
+    <div class="wrap">
+      <div style="color:rgba(255,255,255,.5);font-size:12px;margin-bottom:6px">🔒 Beperkte toegang — Moderator / Admin</div>
+      <h1 style="color:#fff;font-size:21px;font-weight:800;margin-bottom:3px">⚙ Moderatie &amp; Veiligheid Dashboard</h1>
+      <p style="color:rgba(255,255,255,.6);font-size:13px">Anti-scam · Gebruikersbeheer · Payout controls · Audit trail</p>
+    </div>
+  </div>
+  <div style="background:#1e1e1e;padding:0">
+    <div class="wrap" style="display:flex;gap:0">
+      <button onclick="admTab(this,'adm-meldingen')" class="adm-tab on" style="padding:10px 18px;background:none;border:none;border-bottom:3px solid #e8192c;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Meldingen <span style="background:#e8192c;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px">7</span></button>
+      <button onclick="admTab(this,'adm-gebruikers')" class="adm-tab" style="padding:10px 18px;background:none;border:none;border-bottom:3px solid transparent;color:#aaa;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Gebruikers</button>
+      <button onclick="admTab(this,'adm-berichten')" class="adm-tab" style="padding:10px 18px;background:none;border:none;border-bottom:3px solid transparent;color:#aaa;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Geblokkeerde berichten <span style="background:#f5a800;color:#000;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px">12</span></button>
+      <button onclick="admTab(this,'adm-payouts')" class="adm-tab" style="padding:10px 18px;background:none;border:none;border-bottom:3px solid transparent;color:#aaa;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Payout holds</button>
+      <button onclick="admTab(this,'adm-audit')" class="adm-tab" style="padding:10px 18px;background:none;border:none;border-bottom:3px solid transparent;color:#aaa;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Audit trail</button>
+    </div>
+  </div>
+  <div class="page-body" style="padding-top:20px">
+    <div class="wrap">
+
+      <!-- STATS ROW -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px">
+        <div class="card card-body" style="text-align:center;padding:14px">
+          <div style="font-size:26px;font-weight:900;color:#c0392b">7</div>
+          <div style="font-size:11px;color:#999;margin-top:2px">Open meldingen</div>
+        </div>
+        <div class="card card-body" style="text-align:center;padding:14px">
+          <div style="font-size:26px;font-weight:900;color:#c8701e">3</div>
+          <div style="font-size:11px;color:#999;margin-top:2px">In review</div>
+        </div>
+        <div class="card card-body" style="text-align:center;padding:14px">
+          <div style="font-size:26px;font-weight:900;color:#1a4a8a">12</div>
+          <div style="font-size:11px;color:#999;margin-top:2px">Geblokkeerde berichten</div>
+        </div>
+        <div class="card card-body" style="text-align:center;padding:14px">
+          <div style="font-size:26px;font-weight:900;color:#7a1fa2">€ 284</div>
+          <div style="font-size:11px;color:#999;margin-top:2px">Payout on hold</div>
+        </div>
+        <div class="card card-body" style="text-align:center;padding:14px">
+          <div style="font-size:26px;font-weight:900;color:#1f7a45">2</div>
+          <div style="font-size:11px;color:#999;margin-top:2px">Geblokkeerde accounts</div>
+        </div>
+      </div>
+
+      <!-- TAB: MELDINGEN -->
+      <div id="adm-meldingen" class="adm-pane" style="display:block">
+        <table class="mp-table">
+          <thead><tr><th>Datum</th><th>Melder</th><th>Gemelde gebruiker</th><th>Reden</th><th>Risico</th><th>Status</th><th>Actie</th></tr></thead>
+          <tbody>
+            <tr style="background:#fff8f8">
+              <td class="f12 text-soft">26/02 14:05</td>
+              <td class="f13">christophe_d</td>
+              <td class="f13 fw7">wouter_strips</td>
+              <td><span class="badge badge-red">Betaling buiten platform</span></td>
+              <td><span style="background:#c0392b;color:#fff;border-radius:4px;padding:2px 8px;font-size:12px;font-weight:800">🔴 HOOG</span></td>
+              <td><span class="badge badge-orange">Open</span></td>
+              <td style="display:flex;gap:6px;flex-wrap:wrap">
+                <button onclick="alert('Account wouter_strips — in review gezet')" class="btn btn-sm btn-ghost" style="font-size:11px">In review</button>
+                <button onclick="alert('Payout geblokkeerd voor wouter_strips')" class="btn btn-sm" style="background:#7a1fa2;color:#fff;font-size:11px;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-family:inherit">Hold payout</button>
+                <button onclick="alert('Account wouter_strips geblokkeerd')" class="btn btn-sm btn-red" style="font-size:11px">Blokkeer</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">25/02 09:18</td>
+              <td class="f13">pieter_b</td>
+              <td class="f13 fw7">stripkoning_nl</td>
+              <td><span class="badge badge-orange">Oplichting</span></td>
+              <td><span style="background:#c8701e;color:#fff;border-radius:4px;padding:2px 8px;font-size:12px;font-weight:800">🟠 MIDDEN</span></td>
+              <td><span class="badge badge-blue">In review</span></td>
+              <td style="display:flex;gap:6px">
+                <button class="btn btn-sm btn-ghost" style="font-size:11px">Bekijk</button>
+                <button onclick="alert('Melding gesloten — geen actie')" class="btn btn-sm btn-ghost" style="font-size:11px">Sluit</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">24/02 16:44</td>
+              <td class="f13">marieke_v</td>
+              <td class="f13 fw7">jan_strips_be</td>
+              <td><span class="badge badge-gray">Spam</span></td>
+              <td><span style="background:#999;color:#fff;border-radius:4px;padding:2px 8px;font-size:12px;font-weight:800">⚪ LAAG</span></td>
+              <td><span class="badge badge-orange">Open</span></td>
+              <td style="display:flex;gap:6px">
+                <button class="btn btn-sm btn-ghost" style="font-size:11px">Bekijk</button>
+                <button onclick="alert('Waarschuwing verstuurd naar jan_strips_be')" class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--o)">Waarschuw</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TAB: GEBRUIKERS -->
+      <div id="adm-gebruikers" class="adm-pane" style="display:none">
+        <div class="flex gap12 mb12" style="margin-bottom:14px">
+          <input type="text" placeholder="Zoek gebruiker..." style="flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit">
+          <select style="padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit">
+            <option>Alle statussen</option><option>Actief</option><option>In review</option><option>Geblokkeerd</option>
+          </select>
+        </div>
+        <table class="mp-table">
+          <thead><tr><th>Gebruiker</th><th>Lid sinds</th><th>Risk score</th><th>Status</th><th>Meldingen</th><th>Payout</th><th>Actie</th></tr></thead>
+          <tbody>
+            <tr style="background:#fff8f8">
+              <td><strong>wouter_strips</strong><br><span class="f11 text-soft">BE · 47 verkopen</span></td>
+              <td class="f12 text-soft">Jan 2022</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:80px;height:8px;background:#eee;border-radius:4px;overflow:hidden">
+                    <div style="width:78%;height:100%;background:#c0392b;border-radius:4px"></div>
+                  </div>
+                  <span class="f12 fw7" style="color:#c0392b">78</span>
+                </div>
+              </td>
+              <td><span class="badge badge-orange">In review</span></td>
+              <td class="f13 text-red fw7">3</td>
+              <td><span class="badge badge-red">On hold</span></td>
+              <td class="f12" style="display:flex;gap:6px">
+                <button onclick="alert('Account geblokkeerd')" class="btn btn-sm btn-red" style="font-size:11px">Blokkeer</button>
+                <button onclick="alert('Als veilig gemarkeerd')" class="btn btn-sm btn-ghost" style="font-size:11px">✓ Veilig</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>stripkoning_nl</strong><br><span class="f11 text-soft">NL · 23 verkopen</span></td>
+              <td class="f12 text-soft">Mrt 2023</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:80px;height:8px;background:#eee;border-radius:4px;overflow:hidden">
+                    <div style="width:45%;height:100%;background:#c8701e;border-radius:4px"></div>
+                  </div>
+                  <span class="f12 fw7" style="color:#c8701e">45</span>
+                </div>
+              </td>
+              <td><span class="badge badge-blue">In review</span></td>
+              <td class="f13 fw7" style="color:var(--o)">1</td>
+              <td><span class="badge badge-orange">Vertraagd</span></td>
+              <td class="f12" style="display:flex;gap:6px">
+                <button class="btn btn-sm btn-ghost" style="font-size:11px">Bekijk</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>pieter_b</strong><br><span class="f11 text-soft">BE · 8 aankopen</span></td>
+              <td class="f12 text-soft">Nov 2024</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:80px;height:8px;background:#eee;border-radius:4px;overflow:hidden">
+                    <div style="width:12%;height:100%;background:#1f7a45;border-radius:4px"></div>
+                  </div>
+                  <span class="f12 fw7" style="color:#1f7a45">12</span>
+                </div>
+              </td>
+              <td><span class="badge badge-green">Actief</span></td>
+              <td class="f13 text-soft">0</td>
+              <td><span class="badge badge-green">OK</span></td>
+              <td class="f12"><span class="tlink-gray">—</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TAB: GEBLOKKEERDE BERICHTEN -->
+      <div id="adm-berichten" class="adm-pane" style="display:none">
+        <table class="mp-table">
+          <thead><tr><th>Datum</th><th>Van</th><th>Naar</th><th>Detectie</th><th>Bericht (fragment)</th><th>Actie</th></tr></thead>
+          <tbody>
+            <tr style="background:#fff8f8">
+              <td class="f12 text-soft">26/02 14:05</td>
+              <td class="f13 fw7">wouter_strips</td>
+              <td class="f13">christophe_d</td>
+              <td><span class="badge badge-red">Telefoonnummer</span></td>
+              <td class="f12 text-soft" style="font-family:monospace">...bel mij op 04<span style="background:#ffd0d0;padding:0 2px">XX XXX XXX</span> dan spreken...</td>
+              <td style="display:flex;gap:6px">
+                <button onclick="alert('Volledig bericht bekijken — admin only')" class="btn btn-sm btn-ghost" style="font-size:11px">Bekijk</button>
+                <button onclick="alert('Gebruiker gewaarschuwd')" class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--o)">Waarschuw</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">25/02 11:30</td>
+              <td class="f13 fw7">jan_strips_be</td>
+              <td class="f13">marieke_v</td>
+              <td><span class="badge badge-orange">Externe link</span></td>
+              <td class="f12 text-soft" style="font-family:monospace">...betaal via <span style="background:#ffe0b0;padding:0 2px">payconiq.app/...</span> dat is...</td>
+              <td style="display:flex;gap:6px">
+                <button class="btn btn-sm btn-ghost" style="font-size:11px">Bekijk</button>
+                <button onclick="alert('Account jan_strips_be — in review')" class="btn btn-sm btn-ghost" style="font-size:11px">In review</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">24/02 18:02</td>
+              <td class="f13 fw7">unknownuser99</td>
+              <td class="f13">pieter_b</td>
+              <td><span class="badge badge-red">IBAN</span></td>
+              <td class="f12 text-soft" style="font-family:monospace">...stort gewoon op <span style="background:#ffd0d0;padding:0 2px">BE68 5390...</span> dan stuur ik...</td>
+              <td style="display:flex;gap:6px">
+                <button class="btn btn-sm btn-red" style="font-size:11px" onclick="alert('Account unknownuser99 permanent geblokkeerd')">Blokkeer</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="alert alert-blue" style="margin-top:16px">
+          <span>ℹ</span>
+          <span>Automatische detectie actief op: e-mailadressen · telefoonnummers · IBAN-nummers · externe betaallinks · "WhatsApp mij" · "betaal buiten platform" · "overschrijven" · "mail mij rechtstreeks"</span>
+        </div>
+      </div>
+
+      <!-- TAB: PAYOUT HOLDS -->
+      <div id="adm-payouts" class="adm-pane" style="display:none">
+        <table class="mp-table">
+          <thead><tr><th>Verkoper</th><th>Bedrag</th><th>Reden hold</th><th>Sinds</th><th>Stripe status</th><th>Actie</th></tr></thead>
+          <tbody>
+            <tr style="background:#fff8f8">
+              <td><strong>wouter_strips</strong><br><span class="f11 text-soft">3 transacties</span></td>
+              <td class="fw7 text-red">€ 184,50</td>
+              <td><span class="badge badge-red">Scam melding</span></td>
+              <td class="f12 text-soft">26/02/2026</td>
+              <td><span class="badge badge-orange">Geblokkeerd</span></td>
+              <td style="display:flex;gap:6px">
+                <button onclick="alert('Payout vrijgegeven — € 184,50 wordt uitbetaald')" class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--g)">Vrijgeven</button>
+                <button onclick="alert('Payout teruggestort naar kopers')" class="btn btn-sm btn-red" style="font-size:11px">Terugstorten</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>stripkoning_nl</strong><br><span class="f11 text-soft">1 transactie</span></td>
+              <td class="fw7" style="color:var(--o)">€ 99,50</td>
+              <td><span class="badge badge-orange">In review</span></td>
+              <td class="f12 text-soft">25/02/2026</td>
+              <td><span class="badge badge-orange">Vertraagd</span></td>
+              <td style="display:flex;gap:6px">
+                <button onclick="alert('Payout vrijgegeven')" class="btn btn-sm btn-ghost" style="font-size:11px;color:var(--g)">Vrijgeven</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TAB: AUDIT TRAIL -->
+      <div id="adm-audit" class="adm-pane" style="display:none">
+        <table class="mp-table">
+          <thead><tr><th>Datum/tijd</th><th>Admin</th><th>Actie</th><th>Target</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="f12 text-soft">26/02 14:12</td>
+              <td class="f12 fw7">superadmin</td>
+              <td><span class="badge badge-orange">Payout hold</span></td>
+              <td class="f13">wouter_strips</td>
+              <td class="f12 text-soft">Payout on hold — scam melding ref. ML-2026-0047</td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">26/02 14:10</td>
+              <td class="f12 fw7">moderator1</td>
+              <td><span class="badge badge-blue">In review</span></td>
+              <td class="f13">wouter_strips</td>
+              <td class="f12 text-soft">Account in review gezet na melding door christophe_d</td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">26/02 14:05</td>
+              <td class="f12 fw7">systeem</td>
+              <td><span class="badge badge-red">Bericht geblokkeerd</span></td>
+              <td class="f13">wouter_strips → christophe_d</td>
+              <td class="f12 text-soft">Automatisch geblokkeerd — telefoonnummer gedetecteerd (regel: phone_regex_v2)</td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">25/02 09:22</td>
+              <td class="f12 fw7">moderator1</td>
+              <td><span class="badge badge-orange">Waarschuwing</span></td>
+              <td class="f13">jan_strips_be</td>
+              <td class="f12 text-soft">Waarschuwing verstuurd — externe betaallink in chat</td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">24/02 18:05</td>
+              <td class="f12 fw7">systeem</td>
+              <td><span class="badge badge-red">Bericht geblokkeerd</span></td>
+              <td class="f13">unknownuser99 → pieter_b</td>
+              <td class="f12 text-soft">Automatisch geblokkeerd — IBAN gedetecteerd (regel: iban_regex_v1)</td>
+            </tr>
+            <tr>
+              <td class="f12 text-soft">24/02 18:08</td>
+              <td class="f12 fw7">superadmin</td>
+              <td><span class="badge badge-red">Account geblokkeerd</span></td>
+              <td class="f13">unknownuser99</td>
+              <td class="f12 text-soft">Permanent geblokkeerd — herhaaldelijke scam pogingen (2x IBAN, 1x telefoon)</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="alert alert-blue" style="margin-top:16px">
+          <span>🔒</span>
+          <span>Audit trail is read-only. Geen enkele admin kan logs verwijderen of aanpassen zonder eigen log entry.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer style="background:#f5c800;border-top:4px solid #e0a800;margin-top:40px;padding:28px 0 16px">
